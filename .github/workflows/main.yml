@@ -1,0 +1,20 @@
+name: Build F.Y Browser
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm install
+      - run: npm run build:mac
+      - uses: actions/upload-artifact@v3
+        with:
+          name: FY-Browser-Mac
+          path: dist/*.dmg
