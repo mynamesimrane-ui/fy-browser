@@ -7,8 +7,9 @@
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder build --win --x64",
-    "pack": "electron-builder --dir"
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
   },
   "devDependencies": {
     "electron": "^29.0.0",
@@ -17,7 +18,6 @@
   "build": {
     "appId": "com.fy.browser",
     "productName": "F.Y Browser",
-    "copyright": "Made with ❤️ by Imrane — F.Y Team",
     "directories": {
       "output": "dist"
     },
@@ -29,18 +29,20 @@
         }
       ]
     },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "F.Y Browser",
-      "deleteAppDataOnUninstall": true
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "category": "public.app-category.utilities"
     },
     "files": [
       "main.js",
       "index.html",
       "renderer.js",
+      "Style.css",
       "package.json"
     ]
   }
