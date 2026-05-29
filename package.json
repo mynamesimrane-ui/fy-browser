@@ -1,0 +1,47 @@
+{
+  "name": "fy-browser",
+  "version": "1.0.0",
+  "description": "F.Y Browser — Free Forever, For Family",
+  "main": "main.js",
+  "author": "Imrane",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder build --win --x64",
+    "pack": "electron-builder --dir"
+  },
+  "devDependencies": {
+    "electron": "^29.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "build": {
+    "appId": "com.fy.browser",
+    "productName": "F.Y Browser",
+    "copyright": "Made with ❤️ by Imrane — F.Y Team",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "F.Y Browser",
+      "deleteAppDataOnUninstall": true
+    },
+    "files": [
+      "main.js",
+      "index.html",
+      "renderer.js",
+      "package.json"
+    ]
+  }
+}
