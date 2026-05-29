@@ -5,6 +5,23 @@ on:
     branches: [ main ]
 
 jobs:
+  build-win:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - name: Build Windows
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run build:win
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FY-Browser-Windows
+          path: dist/*.exe
+
   build-mac:
     runs-on: macos-latest
     steps:
