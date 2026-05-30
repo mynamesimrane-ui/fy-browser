@@ -10,7 +10,7 @@ window.addEventListener('DOMContentLoaded', () => {
   let tabs = [{ id: 0, title: 'New Tab', url: 'https://www.google.com' }]
   let activeTab = 0
   let downloads = []
-  let games = JSON.parse(localStorage.getItem('games') || '[]')
+  let games = JSON.parse(localStorage.getItem('fy-games') || '[]')
   let fpsActive = false
   let latencyActive = false
   let fpsInterval = null
@@ -65,21 +65,15 @@ window.addEventListener('DOMContentLoaded', () => {
     if (e.key !== 'Enter') return
     let url = urlBar.value.trim()
     if (!url.startsWith('http')) {
-      url = url.includes('.')
-        ? 'https://' + url
-        : 'https://www.google.com/search?q=' + encodeURIComponent(url)
+      url = url.includes('.') ? 'https://' + url : 'https://www.google.com/search?q=' + encodeURIComponent(url)
     }
     webview.src = url
     const tab = tabs.find(t => t.id === activeTab)
     if (tab) tab.url = url
   })
 
-  document.getElementById('back-btn').addEventListener('click', () => {
-    if (webview.canGoBack()) webview.goBack()
-  })
-  document.getElementById('fwd-btn').addEventListener('click', () => {
-    if (webview.canGoForward()) webview.goForward()
-  })
+  document.getElementById('back-btn').addEventListener('click', () => { if (webview.canGoBack()) webview.goBack() })
+  document.getElementById('fwd-btn').addEventListener('click', () => { if (webview.canGoForward()) webview.goForward() })
   document.getElementById('reload-btn').addEventListener('click', () => webview.reload())
 
   webview.addEventListener('did-navigate', (e) => {
@@ -114,7 +108,20 @@ window.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('menu-btn').addEventListener('click', toggleMenu)
   document.getElementById('menu-close-btn').addEventListener('click', closeMenu)
-  document.getElementById('overlay').addEventListener('click', closeMenu)
+  document.getElementById('overlay').addEventListener('click', () => {
+    closeMenu()
+    closeAllPanels()
+  })
+
+  // ─── CLOSE ALL PANELS ──────────────────────────────
+
+  function closeAllPanels() {
+    document.getElementById('network-panel').classList.remove('show')
+    document.getElementById('speed-widget').classList.remove('show')
+    document.getElementById('game-launcher').classList.remove('show')
+    document.getElementById('custom-panel').classList.remove('show')
+    document.getElementById('overlay').classList.remove('show')
+  }
 
   // ─── TRACKER ───────────────────────────────────────
 
@@ -151,10 +158,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('tracker-nav-btn').addEventListener('click', toggleTrackerPanel)
   document.getElementById('tracker-badge').addEventListener('click', toggleTrackerPanel)
-  document.getElementById('menu-tracker-btn').addEventListener('click', () => {
-    toggleTrackerPanel()
-    closeMenu()
-  })
+  document.getElementById('menu-tracker-btn').addEventListener('click', () => { toggleTrackerPanel(); closeMenu() })
 
   // ─── AD BLOCKER ────────────────────────────────────
 
@@ -163,32 +167,21 @@ window.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('adblock-state', (e, state) => {
     adBlockOn = state
     const badge = document.getElementById('adblock-badge')
-    if (state) {
-      badge.textContent = 'ON'
-      badge.style.background = 'rgba(46,213,115,0.2)'
-      badge.style.color = '#2ed573'
-    } else {
-      badge.textContent = 'OFF'
-      badge.style.background = 'rgba(255,71,87,0.2)'
-      badge.style.color = '#ff4757'
-    }
+    badge.textContent = state ? 'ON' : 'OFF'
+    badge.style.background = state ? 'rgba(46,213,115,0.2)' : 'rgba(255,71,87,0.2)'
+    badge.style.color = state ? '#2ed573' : '#ff4757'
   })
 
   document.getElementById('menu-adblock-btn').addEventListener('click', () => {
     adBlockOn = !adBlockOn
     ipcRenderer.send('toggle-adblock', adBlockOn)
-    showToast(
-      adBlockOn ? '🚫 Ad Blocker ON' : '✅ Ad Blocker OFF',
-      adBlockOn ? '#2ed573' : '#ff4757'
-    )
+    showToast(adBlockOn ? '🚫 Ad Blocker ON' : '✅ Ad Blocker OFF', adBlockOn ? '#2ed573' : '#ff4757')
     closeMenu()
   })
 
   // ─── COOKIE DESTROYER ──────────────────────────────
 
-  function showCookieToast() {
-    showToast('🍪 Cookies Destroyed!', '#2ed573')
-  }
+  function showCookieToast() { showToast('🍪 Cookies Destroyed!', '#2ed573') }
 
   document.getElementById('menu-cookie-btn').addEventListener('click', () => {
     ipcRenderer.send('tab-closed')
@@ -222,11 +215,10 @@ window.addEventListener('DOMContentLoaded', () => {
       <div class="dl-item">
         <div class="dl-name">
           <span>${dl.name.slice(0, 28)}${dl.name.length > 28 ? '...' : ''}</span>
-          <span>${dl.status === 'done' ? '✅ Done' : dl.status === 'failed' ? '❌ Failed' : dl.progress + '%'}</span>
+          <span>${dl.status === 'done' ? '✅' : dl.status === 'failed' ? '❌' : dl.progress + '%'}</span>
         </div>
         <div class="dl-bar-bg">
-          <div class="dl-bar ${dl.status === 'done' ? 'done' : dl.status === 'failed' ? 'failed' : ''}"
-               style="width:${dl.progress}%"></div>
+          <div class="dl-bar ${dl.status === 'done' ? 'done' : dl.status === 'failed' ? 'failed' : ''}" style="width:${dl.progress}%"></div>
         </div>
         <div class="dl-actions">
           ${dl.status === 'done' ? `<button onclick="window._openFile('${dl.path.replace(/\\/g, '\\\\')}')">📂 Open</button>` : ''}
@@ -254,10 +246,7 @@ window.addEventListener('DOMContentLoaded', () => {
     if (dl) { dl.status = status; dl.progress = 100; renderDownloads() }
   })
 
-  document.getElementById('menu-dl-btn').addEventListener('click', () => {
-    toggleDownloadPopup()
-    closeMenu()
-  })
+  document.getElementById('menu-dl-btn').addEventListener('click', () => { toggleDownloadPopup(); closeMenu() })
   document.getElementById('dl-close-btn').addEventListener('click', toggleDownloadPopup)
 
   // ─── FPS COUNTER ───────────────────────────────────
@@ -289,38 +278,22 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function countFrame() {
-    frames++
-    if (fpsActive) requestAnimationFrame(countFrame)
-  }
+  function countFrame() { frames++; if (fpsActive) requestAnimationFrame(countFrame) }
 
-  document.getElementById('menu-fps-btn').addEventListener('click', () => {
-    toggleFPS()
-    closeMenu()
-  })
+  document.getElementById('menu-fps-btn').addEventListener('click', () => { toggleFPS(); closeMenu() })
 
   // ─── LOW LATENCY MODE ──────────────────────────────
 
   function toggleLatency() {
     latencyActive = !latencyActive
     const badge = document.getElementById('latency-badge')
-    if (latencyActive) {
-      badge.textContent = 'ON'
-      badge.style.background = 'rgba(46,213,115,0.2)'
-      badge.style.color = '#2ed573'
-      showToast('⚡ Low Latency Mode ON', '#2ed573')
-    } else {
-      badge.textContent = 'OFF'
-      badge.style.background = ''
-      badge.style.color = ''
-      showToast('⚡ Low Latency Mode OFF', '#888888')
-    }
+    badge.textContent = latencyActive ? 'ON' : 'OFF'
+    badge.style.background = latencyActive ? 'rgba(46,213,115,0.2)' : ''
+    badge.style.color = latencyActive ? '#2ed573' : ''
+    showToast(latencyActive ? '⚡ Low Latency ON' : '⚡ Low Latency OFF', latencyActive ? '#2ed573' : '#888888')
   }
 
-  document.getElementById('menu-latency-btn').addEventListener('click', () => {
-    toggleLatency()
-    closeMenu()
-  })
+  document.getElementById('menu-latency-btn').addEventListener('click', () => { toggleLatency(); closeMenu() })
 
   // ─── GAME LAUNCHER ─────────────────────────────────
 
@@ -358,10 +331,10 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('add-game-btn').addEventListener('click', () => {
     const name = prompt('Game name?')
     if (!name) return
-    const path = prompt('Full path to .exe? (e.g. C:\\Games\\game.exe)')
+    const path = prompt('Full path to .exe?')
     if (!path) return
     games.push({ name, path })
-    localStorage.setItem('games', JSON.stringify(games))
+    localStorage.setItem('fy-games', JSON.stringify(games))
     renderGames()
   })
 
@@ -386,13 +359,11 @@ window.addEventListener('DOMContentLoaded', () => {
     const label = document.getElementById('speed-label')
     const dlSpeed = document.getElementById('dl-speed')
     const ulSpeed = document.getElementById('ul-speed')
-
     btn.disabled = true
     btn.textContent = 'Testing...'
     val.textContent = '--'
     dlSpeed.textContent = '--'
     ulSpeed.textContent = '--'
-
     label.textContent = 'Testing Download...'
     try {
       const dlResult = await testDownloadSpeed()
@@ -407,7 +378,6 @@ window.addEventListener('DOMContentLoaded', () => {
       label.textContent = '❌ Test failed'
       val.textContent = '--'
     }
-
     btn.disabled = false
     btn.textContent = 'Run Again'
   }
@@ -418,10 +388,176 @@ window.addEventListener('DOMContentLoaded', () => {
     const res = await fetch(testUrl)
     const data = await res.arrayBuffer()
     const end = performance.now()
-    const durationSec = (end - start) / 1000
-    const bits = data.byteLength * 8
-    return (bits / durationSec) / 1_000_000
+    return (data.byteLength * 8) / ((end - start) / 1000) / 1_000_000
   }
+
+  // ─── VPN + NETWORK BOOSTER ─────────────────────────
+
+  function openNetworkPanel() {
+    document.getElementById('network-panel').classList.add('show')
+    document.getElementById('overlay').classList.add('show')
+    closeMenu()
+  }
+
+  document.getElementById('menu-network-btn').addEventListener('click', openNetworkPanel)
+  document.getElementById('booster-nav-btn').addEventListener('click', openNetworkPanel)
+  document.getElementById('network-close-btn').addEventListener('click', () => {
+    document.getElementById('network-panel').classList.remove('show')
+    document.getElementById('overlay').classList.remove('show')
+  })
+
+  // VPN
+  ipcRenderer.send('get-vpn-state')
+  ipcRenderer.on('vpn-state', (e, state) => {
+    document.getElementById('vpn-toggle').checked = state
+    const status = document.getElementById('vpn-status')
+    const ip = document.getElementById('vpn-ip')
+    status.textContent = state ? 'ON' : 'OFF'
+    status.className = state ? 'stat-val good' : 'stat-val'
+    ip.textContent = state ? 'Active' : '--'
+    ip.className = state ? 'stat-val good' : 'stat-val'
+  })
+
+  document.getElementById('vpn-toggle').addEventListener('change', (e) => {
+    ipcRenderer.send('toggle-vpn', e.target.checked)
+    showToast(e.target.checked ? '🔒 VPN ON' : '🔒 VPN OFF', e.target.checked ? '#5352ed' : '#888888')
+  })
+
+  // Booster
+  ipcRenderer.send('get-booster-state')
+  ipcRenderer.on('booster-state', (e, state) => {
+    document.getElementById('booster-toggle').checked = state
+    const status = document.getElementById('booster-status')
+    status.textContent = state ? 'ON' : 'OFF'
+    status.className = state ? 'stat-val good' : 'stat-val'
+  })
+
+  document.getElementById('booster-toggle').addEventListener('change', (e) => {
+    ipcRenderer.send('toggle-booster', e.target.checked)
+    showToast(e.target.checked ? '📡 Booster ON' : '📡 Booster OFF', e.target.checked ? '#2ed573' : '#888888')
+  })
+
+  // Ping
+  document.getElementById('ping-btn').addEventListener('click', () => {
+    const btn = document.getElementById('ping-btn')
+    const pingVal = document.getElementById('ping-val')
+    btn.textContent = 'Testing...'
+    btn.disabled = true
+    pingVal.textContent = '--'
+    ipcRenderer.send('ping-test')
+  })
+
+  ipcRenderer.on('ping-result', (e, ping) => {
+    const btn = document.getElementById('ping-btn')
+    const pingVal = document.getElementById('ping-val')
+    btn.textContent = '🏓 Test Ping'
+    btn.disabled = false
+    pingVal.textContent = ping
+    pingVal.className = ping < 50 ? 'stat-val good' : ping < 100 ? 'stat-val ok' : 'stat-val bad'
+  })
+
+  // ─── CUSTOMIZATION ─────────────────────────────────
+
+  // Load saved settings
+  const savedTheme = localStorage.getItem('fy-theme') || 'dark'
+  const savedFont = localStorage.getItem('fy-font') || 'Inter'
+  const savedRadius = localStorage.getItem('fy-radius') || '8px'
+  const savedAccent = localStorage.getItem('fy-accent') || null
+
+  applyTheme(savedTheme)
+  applyFont(savedFont)
+  applyRadius(savedRadius)
+  if (savedAccent) applyAccent(savedAccent)
+
+  function applyTheme(theme) {
+    document.body.className = document.body.className.replace(/theme-\w+/g, '')
+    if (theme !== 'dark') document.body.classList.add('theme-' + theme)
+    document.querySelectorAll('.theme-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.theme === theme)
+    })
+    localStorage.setItem('fy-theme', theme)
+  }
+
+  function applyFont(font) {
+    document.documentElement.style.setProperty('--font', `'${font}', sans-serif`)
+    document.querySelectorAll('.font-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.font === font)
+    })
+    localStorage.setItem('fy-font', font)
+  }
+
+  function applyRadius(radius) {
+    document.querySelectorAll('.nav-btn, .tab, .menu-item, .dl-item, .network-card, #side-menu').forEach(el => {
+      el.style.borderRadius = radius
+    })
+    document.querySelectorAll('.radius-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.radius === radius)
+    })
+    localStorage.setItem('fy-radius', radius)
+  }
+
+  function applyAccent(color) {
+    document.documentElement.style.setProperty('--blue', color)
+    document.documentElement.style.setProperty('--accent2', color)
+    localStorage.setItem('fy-accent', color)
+  }
+
+  // Theme buttons
+  document.querySelectorAll('.theme-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyTheme(btn.dataset.theme))
+  })
+
+  // Font buttons
+  document.querySelectorAll('.font-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyFont(btn.dataset.font))
+  })
+
+  // Radius buttons
+  document.querySelectorAll('.radius-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyRadius(btn.dataset.radius))
+  })
+
+  // Color dots
+  document.querySelectorAll('.color-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+      document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'))
+      dot.classList.add('active')
+      applyAccent(dot.dataset.color)
+    })
+  })
+
+  // Custom color picker
+  document.getElementById('custom-color').addEventListener('input', (e) => {
+    applyAccent(e.target.value)
+  })
+
+  // Open/close customization panel
+  document.getElementById('menu-custom-btn').addEventListener('click', () => {
+    document.getElementById('custom-panel').classList.add('show')
+    document.getElementById('overlay').classList.add('show')
+    closeMenu()
+  })
+
+  document.getElementById('custom-close-btn').addEventListener('click', () => {
+    document.getElementById('custom-panel').classList.remove('show')
+    document.getElementById('overlay').classList.remove('show')
+  })
+
+  // ─── AUTO UPDATE ───────────────────────────────────
+
+  ipcRenderer.on('update-available', () => {
+    showToast('🔄 Update downloading...', '#5352ed')
+  })
+
+  ipcRenderer.on('update-downloaded', () => {
+    const toast = document.getElementById('cookie-toast')
+    toast.textContent = '✅ Update ready! Click to restart'
+    toast.style.background = '#5352ed'
+    toast.style.color = 'white'
+    toast.style.display = 'block'
+    toast.style.cursor = 'pointer'
+    toast.onclick = () => ipcRenderer.send('restart-app')
+  })
 
   // ─── TOAST ─────────────────────────────────────────
 
@@ -431,6 +567,8 @@ window.addEventListener('DOMContentLoaded', () => {
     toast.style.background = color
     toast.style.color = color === '#888888' ? '#fff' : '#000'
     toast.style.display = 'block'
+    toast.style.cursor = 'default'
+    toast.onclick = null
     setTimeout(() => toast.style.display = 'none', 2000)
   }
 

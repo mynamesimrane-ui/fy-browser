@@ -43,24 +43,21 @@ app.whenReady().then(() => {
   mainWindow.loadFile('index.html')
 
   // ── AUTO UPDATER ──
-  autoUpdater.checkForUpdatesAndNotify()
-
-  autoUpdater.on('update-available', () => {
-    mainWindow.webContents.send('update-available')
-  })
-
-  autoUpdater.on('update-downloaded', () => {
-    mainWindow.webContents.send('update-downloaded')
-  })
-
-  autoUpdater.on('error', (err) => {
-    console.log('Update error:', err)
-  })
+  try {
+    autoUpdater.checkForUpdatesAndNotify()
+    autoUpdater.on('update-available', () => {
+      mainWindow.webContents.send('update-available')
+    })
+    autoUpdater.on('update-downloaded', () => {
+      mainWindow.webContents.send('update-downloaded')
+    })
+  } catch (e) {
+    console.log('Updater error:', e)
+  }
 
   // ── TRACKER + AD BLOCKER ──
   session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
     const url = details.url
-
     const isTracker = TRACKERS.some(t => url.includes(t))
     if (isTracker) {
       blockedTrackers.push(url)
@@ -68,13 +65,11 @@ app.whenReady().then(() => {
       callback({ cancel: true })
       return
     }
-
     const isAd = adBlockEnabled && ADS.some(a => url.includes(a))
     if (isAd) {
       callback({ cancel: true })
       return
     }
-
     callback({ cancel: false })
   })
 
@@ -84,31 +79,21 @@ app.whenReady().then(() => {
     const fileSize = item.getTotalBytes()
     const savePath = path.join(app.getPath('downloads'), fileName)
     item.setSavePath(savePath)
-
     const downloadId = Date.now()
-
     mainWindow.webContents.send('download-started', {
-      id: downloadId,
-      name: fileName,
-      size: fileSize,
-      path: savePath,
-      progress: 0,
-      status: 'downloading'
+      id: downloadId, name: fileName, size: fileSize,
+      path: savePath, progress: 0, status: 'downloading'
     })
-
     item.on('updated', (e, state) => {
       if (state === 'progressing') {
         const progress = item.getTotalBytes()
-          ? Math.round((item.getReceivedBytes() / item.getTotalBytes()) * 100)
-          : 0
+          ? Math.round((item.getReceivedBytes() / item.getTotalBytes()) * 100) : 0
         mainWindow.webContents.send('download-progress', { id: downloadId, progress })
       }
     })
-
     item.once('done', (e, state) => {
       mainWindow.webContents.send('download-done', {
-        id: downloadId,
-        status: state === 'completed' ? 'done' : 'failed'
+        id: downloadId, status: state === 'completed' ? 'done' : 'failed'
       })
     })
   })
@@ -132,10 +117,7 @@ ipcMain.on('tab-closed', async () => {
 })
 
 // ── TRACKERS ──
-ipcMain.on('get-trackers', (e) => {
-  e.reply('tracker-list', blockedTrackers)
-})
-
+ipcMain.on('get-trackers', (e) => { e.reply('tracker-list', blockedTrackers) })
 ipcMain.on('reset-trackers', () => {
   blockedTrackers = []
   mainWindow.webContents.send('tracker-detected', 0)
@@ -146,62 +128,46 @@ ipcMain.on('toggle-adblock', (e, state) => {
   adBlockEnabled = state
   mainWindow.webContents.send('adblock-state', adBlockEnabled)
 })
-
-ipcMain.on('get-adblock-state', (e) => {
-  e.reply('adblock-state', adBlockEnabled)
-})
+ipcMain.on('get-adblock-state', (e) => { e.reply('adblock-state', adBlockEnabled) })
 
 // ── FILES ──
-ipcMain.on('open-file', (e, filePath) => {
-  shell.openPath(filePath)
-})
+ipcMain.on('open-file', (e, filePath) => { shell.openPath(filePath) })
 
 // ── GAME LAUNCHER ──
-ipcMain.on('launch-game', (e, gamePath) => {
-  shell.openPath(gamePath)
-})
+ipcMain.on('launch-game', (e, gamePath) => { shell.openPath(gamePath) })
 
 // ── NETWORK BOOSTER ──
 ipcMain.on('toggle-booster', (e, state) => {
   networkBoosterOn = state
+  const iface = 'Wi-Fi'
   if (state) {
-    exec('netsh interface ip set dns "Wi-Fi" static 1.1.1.1', () => {})
-    exec('netsh interface ip add dns "Wi-Fi" 8.8.8.8 index=2', () => {})
+    exec(`netsh interface ip set dns "${iface}" static 1.1.1.1`)
+    exec(`netsh interface ip add dns "${iface}" 8.8.8.8 index=2`)
   } else {
-    exec('netsh interface ip set dns "Wi-Fi" dhcp', () => {})
+    exec(`netsh interface ip set dns "${iface}" dhcp`)
   }
   mainWindow.webContents.send('booster-state', state)
 })
-
-ipcMain.on('get-booster-state', (e) => {
-  e.reply('booster-state', networkBoosterOn)
-})
+ipcMain.on('get-booster-state', (e) => { e.reply('booster-state', networkBoosterOn) })
 
 // ── VPN PROXY ──
 ipcMain.on('toggle-vpn', (e, state) => {
   vpnProxyOn = state
   if (state) {
-    exec('netsh winhttp set proxy proxy-server="socks=127.0.0.1:1080"', () => {})
+    exec('netsh winhttp set proxy proxy-server="socks=127.0.0.1:1080"')
   } else {
-    exec('netsh winhttp reset proxy', () => {})
+    exec('netsh winhttp reset proxy')
   }
   mainWindow.webContents.send('vpn-state', state)
 })
-
-ipcMain.on('get-vpn-state', (e) => {
-  e.reply('vpn-state', vpnProxyOn)
-})
+ipcMain.on('get-vpn-state', (e) => { e.reply('vpn-state', vpnProxyOn) })
 
 // ── PING TEST ──
 ipcMain.on('ping-test', (e) => {
   const start = Date.now()
-  exec('ping -n 1 1.1.1.1', () => {
-    const ping = Date.now() - start
-    e.reply('ping-result', ping)
-  })
+  const cmd = process.platform === 'win32' ? 'ping -n 1 1.1.1.1' : 'ping -c 1 1.1.1.1'
+  exec(cmd, () => { e.reply('ping-result', Date.now() - start) })
 })
 
 // ── AUTO UPDATE ──
-ipcMain.on('restart-app', () => {
-  autoUpdater.quitAndInstall()
-})
+ipcMain.on('restart-app', () => { autoUpdater.quitAndInstall() })
