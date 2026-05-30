@@ -17,7 +17,6 @@
       --text: #ffffff;
       --text2: #888888;
       --text3: #444444;
-      --accent: #ffffff;
       --accent2: #333333;
       --red: #ff4757;
       --green: #2ed573;
@@ -26,7 +25,6 @@
       --font: 'Inter', sans-serif;
     }
 
-    /* ── THEMES ── */
     body.theme-light {
       --bg: #f5f5f5; --bg2: #ffffff; --bg3: #eeeeee;
       --bg4: #e0e0e0; --border: #dddddd; --text: #111111;
@@ -55,8 +53,7 @@
     body.theme-neon {
       --bg: #000000; --bg2: #050505; --bg3: #0a0a0a;
       --bg4: #111111; --border: #00ff88; --text: #00ff88;
-      --text2: #00aa55; --accent2: #00ff88; --red: #ff0066;
-      --green: #00ff88; --blue: #0088ff;
+      --text2: #00aa55; --accent2: #00ff88;
     }
     body.theme-galaxy {
       --bg: #05001a; --bg2: #080028; --bg3: #0d003c;
@@ -182,20 +179,21 @@
     .nav-btn {
       width: 32px; height: 32px;
       background: var(--bg3); border: 1px solid var(--border);
-      color: var(--text2); font-size: 14px; cursor: pointer;
+      color: var(--text2); font-size: 13px; cursor: pointer;
       border-radius: 8px; display: flex; align-items: center;
       justify-content: center; transition: all 0.15s; flex-shrink: 0;
+      font-family: var(--font); font-weight: 600;
     }
 
     .nav-btn:hover { background: var(--bg4); color: var(--text); }
 
     #url-wrap { flex: 1; position: relative; display: flex; align-items: center; }
-    #url-icon { position: absolute; left: 12px; color: var(--text3); font-size: 12px; }
+    #url-icon { position: absolute; left: 12px; color: var(--text3); font-size: 11px; font-weight: 600; }
 
     #url-bar {
       width: 100%; background: var(--bg3);
       border: 1px solid var(--border); border-radius: 10px;
-      padding: 8px 16px 8px 32px; color: var(--text);
+      padding: 8px 16px 8px 36px; color: var(--text);
       font-size: 13px; font-family: var(--font);
       outline: none; transition: all 0.2s;
     }
@@ -269,16 +267,17 @@
     .menu-item-icon {
       width: 30px; height: 30px; border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 15px; flex-shrink: 0;
+      font-size: 13px; flex-shrink: 0; font-weight: 700;
     }
 
-    .icon-red { background: rgba(255,71,87,0.15); }
-    .icon-yellow { background: rgba(255,165,2,0.15); }
-    .icon-blue { background: rgba(83,82,237,0.15); }
-    .icon-green { background: rgba(46,213,115,0.15); }
-    .icon-purple { background: rgba(156,39,176,0.15); }
-    .icon-white { background: rgba(255,255,255,0.08); }
-    .icon-pink { background: rgba(255,100,150,0.15); }
+    .icon-red { background: rgba(255,71,87,0.15); color: #ff4757; }
+    .icon-yellow { background: rgba(255,165,2,0.15); color: #ffa502; }
+    .icon-blue { background: rgba(83,82,237,0.15); color: #5352ed; }
+    .icon-green { background: rgba(46,213,115,0.15); color: #2ed573; }
+    .icon-purple { background: rgba(156,39,176,0.15); color: #9c27b0; }
+    .icon-white { background: rgba(255,255,255,0.08); color: #fff; }
+    .icon-pink { background: rgba(255,100,150,0.15); color: #ff6496; }
+    .icon-orange { background: rgba(255,120,0,0.15); color: #ff7800; }
 
     .menu-badge {
       margin-left: auto; font-size: 10px; font-weight: 600;
@@ -288,8 +287,6 @@
     .badge-red { background: rgba(255,71,87,0.2); color: var(--red); }
     .badge-soon { background: var(--bg4); color: var(--text3); }
     .badge-blue { background: rgba(83,82,237,0.2); color: #7c7bff; }
-    .coming-soon { opacity: 0.5; cursor: not-allowed !important; }
-    .coming-soon:hover { background: transparent !important; color: var(--text2) !important; }
 
     .menu-footer {
       padding: 16px 20px; border-top: 1px solid var(--border); text-align: center;
@@ -391,7 +388,6 @@
     .speed-unit { font-size: 12px; color: var(--text2); margin-top: 4px; }
     .speed-label { font-size: 11px; color: var(--text3); margin-top: 2px; }
     .speed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
-
     .speed-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
     .speed-card-val { font-size: 20px; font-weight: 700; }
     .speed-card-label { font-size: 11px; color: var(--text2); margin-top: 4px; }
@@ -419,53 +415,6 @@
 
     .speed-close:hover { background: var(--red); color: white; }
 
-    /* ── FPS COUNTER ── */
-    #fps-counter {
-      position: fixed; top: 50px; left: 12px;
-      background: rgba(0,0,0,0.85); border: 1px solid var(--border);
-      border-radius: 8px; padding: 6px 12px;
-      font-size: 12px; font-weight: 600; color: var(--green);
-      z-index: 500; display: none; font-family: monospace;
-      backdrop-filter: blur(10px);
-    }
-
-    /* ── GAME LAUNCHER ── */
-    #game-launcher {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 20px; padding: 24px; width: 360px;
-      z-index: 1001; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-      display: none; flex-direction: column; gap: 16px;
-    }
-
-    #game-launcher.show { display: flex; }
-    .launcher-header { display: flex; justify-content: space-between; align-items: center; }
-    .launcher-header h3 { font-size: 15px; font-weight: 600; }
-    .game-list { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; scrollbar-width: none; }
-
-    .game-item {
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 12px; padding: 12px 14px;
-      display: flex; align-items: center; gap: 12px;
-      cursor: pointer; transition: all 0.15s;
-    }
-
-    .game-item:hover { background: var(--bg4); }
-    .game-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--bg4); display: flex; align-items: center; justify-content: center; font-size: 20px; }
-    .game-name { font-size: 13px; font-weight: 500; }
-    .game-path { font-size: 11px; color: var(--text3); margin-top: 2px; }
-
-    .add-game-btn {
-      background: var(--bg3); border: 1px dashed var(--border);
-      border-radius: 12px; padding: 12px; text-align: center;
-      cursor: pointer; color: var(--text2); font-size: 13px;
-      font-weight: 500; transition: all 0.15s;
-      font-family: var(--font); width: 100%;
-    }
-
-    .add-game-btn:hover { background: var(--bg4); color: var(--text); }
-
     /* ── NETWORK PANEL ── */
     #network-panel {
       position: fixed; top: 50%; left: 50%;
@@ -481,7 +430,7 @@
     .network-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
     .network-card-header { display: flex; align-items: center; justify-content: space-between; }
     .network-card-title { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
-    .network-card-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
+    .network-card-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
     .network-card-desc { font-size: 11px; color: var(--text2); line-height: 1.5; }
 
     .toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
@@ -521,6 +470,39 @@
     .network-panel-header { display: flex; justify-content: space-between; align-items: center; }
     .network-panel-header h3 { font-size: 15px; font-weight: 600; }
 
+    /* ── ANTIVIRUS PANEL ── */
+    #antivirus-panel {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 24px; width: 360px;
+      z-index: 1001; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+      display: none; flex-direction: column; gap: 16px;
+    }
+
+    #antivirus-panel.show { display: flex; }
+    .av-header { display: flex; justify-content: space-between; align-items: center; }
+    .av-header h3 { font-size: 15px; font-weight: 600; }
+
+    .av-status {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px;
+      display: flex; align-items: center; gap: 14px;
+    }
+
+    .av-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      background: rgba(46,213,115,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 800; color: #2ed573;
+      flex-shrink: 0;
+    }
+
+    .av-icon.danger { background: rgba(255,71,87,0.15); color: #ff4757; }
+
+    .av-title { font-size: 14px; font-weight: 600; }
+    .av-sub { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
     /* ── CUSTOMIZATION PANEL ── */
     #custom-panel {
       position: fixed; top: 50%; left: 50%;
@@ -542,26 +524,25 @@
     .custom-section { display: flex; flex-direction: column; gap: 10px; }
     .custom-section h4 { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
 
-    /* Theme Grid */
     .theme-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 
     .theme-btn {
       border-radius: 10px; padding: 10px 6px;
-      cursor: pointer; font-size: 11px; font-weight: 600;
+      cursor: pointer; font-size: 10px; font-weight: 600;
       border: 2px solid transparent; transition: all 0.2s;
       text-align: center; display: flex; flex-direction: column;
-      align-items: center; gap: 6px;
+      align-items: center; gap: 6px; color: var(--text2);
+      background: var(--bg3);
     }
 
-    .theme-btn:hover { border-color: var(--text2); transform: scale(1.05); }
-    .theme-btn.active { border-color: var(--text) !important; }
+    .theme-btn:hover { border-color: var(--text2); transform: scale(1.05); color: var(--text); }
+    .theme-btn.active { border-color: var(--text) !important; color: var(--text); }
 
     .theme-preview {
       width: 32px; height: 32px; border-radius: 8px;
       border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* Font picker */
     .font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 
     .font-btn {
@@ -574,7 +555,6 @@
     .font-btn:hover { background: var(--bg4); color: var(--text); }
     .font-btn.active { border-color: var(--text); color: var(--text); }
 
-    /* Color picker */
     .color-grid { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
     .color-dot {
@@ -586,15 +566,6 @@
     .color-dot:hover { transform: scale(1.2); }
     .color-dot.active { border-color: white; }
 
-    .custom-color-input {
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 8px; padding: 6px 10px;
-      color: var(--text); font-size: 12px;
-      font-family: var(--font); outline: none;
-      width: 100px;
-    }
-
-    /* Radius picker */
     .radius-grid { display: flex; gap: 8px; }
 
     .radius-btn {
@@ -606,6 +577,159 @@
 
     .radius-btn:hover { background: var(--bg4); color: var(--text); }
     .radius-btn.active { border-color: var(--text); color: var(--text); }
+
+    /* Own UI Button */
+    .own-ui-btn {
+      background: linear-gradient(135deg, #5352ed, #9c27b0);
+      border: none; border-radius: 12px; padding: 14px;
+      color: white; font-size: 14px; font-weight: 600;
+      cursor: pointer; font-family: var(--font);
+      transition: all 0.2s; width: 100%; text-align: center;
+    }
+
+    .own-ui-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    /* ── OWN UI PANEL ── */
+    #own-ui-panel {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 24px; width: 500px;
+      max-height: 80vh; overflow-y: auto;
+      z-index: 1002; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+      display: none; flex-direction: column; gap: 16px;
+      scrollbar-width: none;
+    }
+
+    #own-ui-panel.show { display: flex; }
+    #own-ui-panel::-webkit-scrollbar { display: none; }
+
+    .own-ui-header { display: flex; justify-content: space-between; align-items: center; }
+    .own-ui-header h3 { font-size: 15px; font-weight: 600; }
+
+    .css-editor {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px;
+      color: var(--text); font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      width: 100%; height: 200px; resize: vertical;
+      outline: none; line-height: 1.6;
+    }
+
+    .apply-css-btn {
+      background: var(--text); color: var(--bg); border: none;
+      border-radius: 10px; padding: 10px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: var(--font); transition: opacity 0.15s; width: 100%;
+    }
+
+    .apply-css-btn:hover { opacity: 0.85; }
+
+    .css-presets { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    .css-preset {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px; cursor: pointer;
+      color: var(--text2); font-size: 12px; font-weight: 500;
+      text-align: center; transition: all 0.15s; font-family: var(--font);
+    }
+
+    .css-preset:hover { background: var(--bg4); color: var(--text); }
+
+    /* ── FEEDBACK PANEL ── */
+    #feedback-panel {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 24px; width: 400px;
+      z-index: 1001; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+      display: none; flex-direction: column; gap: 16px;
+    }
+
+    #feedback-panel.show { display: flex; }
+
+    .feedback-header { display: flex; justify-content: space-between; align-items: center; }
+    .feedback-header h3 { font-size: 15px; font-weight: 600; }
+
+    .feedback-types { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+    .feedback-type {
+      background: var(--bg3); border: 2px solid transparent;
+      border-radius: 10px; padding: 10px 6px; cursor: pointer;
+      color: var(--text2); font-size: 11px; font-weight: 600;
+      text-align: center; transition: all 0.15s;
+    }
+
+    .feedback-type:hover { background: var(--bg4); color: var(--text); }
+    .feedback-type.active { border-color: var(--blue); color: var(--text); }
+
+    .feedback-input {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px; color: var(--text);
+      font-size: 13px; font-family: var(--font);
+      width: 100%; height: 100px; resize: none; outline: none;
+      line-height: 1.5;
+    }
+
+    .feedback-input::placeholder { color: var(--text3); }
+
+    .feedback-input:focus { border-color: var(--accent2); }
+
+    .send-feedback-btn {
+      background: var(--blue); color: white; border: none;
+      border-radius: 10px; padding: 12px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: var(--font); transition: opacity 0.15s; width: 100%;
+    }
+
+    .send-feedback-btn:hover { opacity: 0.85; }
+
+    .feedback-rating { display: flex; gap: 8px; justify-content: center; }
+
+    .rating-star {
+      font-size: 24px; cursor: pointer; transition: transform 0.1s;
+      color: var(--text3); background: none; border: none;
+      font-family: var(--font);
+    }
+
+    .rating-star:hover, .rating-star.active { color: #ffa502; transform: scale(1.2); }
+
+    /* ── UPDATE PANEL ── */
+    #update-panel {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 16px; width: 300px;
+      z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      display: none; flex-direction: column; gap: 10px;
+    }
+
+    #update-panel.show { display: flex; }
+    .update-title { font-size: 13px; font-weight: 600; }
+    .update-sub { font-size: 11px; color: var(--text2); }
+
+    .update-bar-bg { background: var(--bg4); border-radius: 10px; height: 4px; overflow: hidden; }
+    .update-bar { height: 4px; border-radius: 10px; background: var(--blue); width: 0%; transition: width 0.3s; }
+
+    .update-btn {
+      background: var(--text); color: var(--bg); border: none;
+      border-radius: 8px; padding: 8px 16px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      font-family: var(--font); transition: opacity 0.15s;
+    }
+
+    .update-btn:hover { opacity: 0.85; }
+
+    /* ── ALERT ── */
+    #security-alert {
+      position: fixed; top: 60px; left: 50%;
+      transform: translateX(-50%);
+      background: #ff4757; color: white;
+      border-radius: 12px; padding: 12px 20px;
+      font-size: 13px; font-weight: 600;
+      display: none; z-index: 9999;
+      box-shadow: 0 4px 20px rgba(255,71,87,0.4);
+      max-width: 500px; text-align: center;
+    }
 
     /* ── COOKIE TOAST ── */
     #cookie-toast {
@@ -625,7 +749,7 @@
     <div class="brand">
       <span class="brand-fy">F.Y</span>
       <span>Browser</span>
-      <span class="brand-sub">— For Family ❤️</span>
+      <span class="brand-sub">— For Family</span>
     </div>
     <div class="win-btns">
       <button class="win-btn" id="min-btn">─</button>
@@ -641,16 +765,16 @@
 
   <!-- Navbar -->
   <div id="navbar">
-    <button class="nav-btn" id="back-btn">←</button>
-    <button class="nav-btn" id="fwd-btn">→</button>
-    <button class="nav-btn" id="reload-btn">↺</button>
+    <button class="nav-btn" id="back-btn" title="Back">&#8592;</button>
+    <button class="nav-btn" id="fwd-btn" title="Forward">&#8594;</button>
+    <button class="nav-btn" id="reload-btn" title="Reload">&#8635;</button>
     <div id="url-wrap">
-      <span id="url-icon">🔍</span>
+      <span id="url-icon">HTTP</span>
       <input id="url-bar" type="text" placeholder="Search or type a URL..." />
     </div>
-    <button class="nav-btn" id="tracker-nav-btn">🛡️</button>
-    <button class="nav-btn" id="booster-nav-btn" title="Network Booster">📡</button>
-    <button class="nav-btn" id="menu-btn">☰</button>
+    <button class="nav-btn" id="tracker-nav-btn" title="Tracker Info">&#128737;</button>
+    <button class="nav-btn" id="booster-nav-btn" title="Network Booster">NET</button>
+    <button class="nav-btn" id="menu-btn" title="Menu">&#9776;</button>
   </div>
 
   <!-- Browser View -->
@@ -672,81 +796,94 @@
       <div class="menu-section">
         <div class="menu-section-title">Privacy</div>
         <div class="menu-item" id="menu-tracker-btn">
-          <div class="menu-item-icon icon-red">🚫</div>
+          <div class="menu-item-icon icon-red">BLK</div>
           Tracker Blocker
           <span class="menu-badge badge-red" id="menu-tracker-count">0</span>
         </div>
         <div class="menu-item" id="menu-adblock-btn">
-          <div class="menu-item-icon icon-red">🚫</div>
+          <div class="menu-item-icon icon-red">AD</div>
           Ad Blocker
           <span class="menu-badge" id="adblock-badge">ON</span>
         </div>
         <div class="menu-item" id="menu-cookie-btn">
-          <div class="menu-item-icon icon-yellow">🍪</div>
-          Clear Cookies Now
+          <div class="menu-item-icon icon-yellow">CKI</div>
+          Clear Cookies
+        </div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Security</div>
+        <div class="menu-item" id="menu-antivirus-btn">
+          <div class="menu-item-icon icon-green">AV</div>
+          Antivirus
+          <span class="menu-badge" id="av-badge" style="background:rgba(46,213,115,0.2);color:#2ed573">ON</span>
         </div>
       </div>
 
       <div class="menu-section">
         <div class="menu-section-title">Downloads</div>
         <div class="menu-item" id="menu-dl-btn">
-          <div class="menu-item-icon icon-blue">📥</div>
+          <div class="menu-item-icon icon-blue">DL</div>
           Download Manager
           <span class="menu-badge badge-blue" id="menu-dl-count" style="display:none">0</span>
         </div>
       </div>
 
       <div class="menu-section">
-        <div class="menu-section-title">Gaming</div>
+        <div class="menu-section-title">Performance</div>
         <div class="menu-item" id="menu-fps-btn">
-          <div class="menu-item-icon icon-green">📊</div>
+          <div class="menu-item-icon icon-green">FPS</div>
           FPS Counter
           <span class="menu-badge badge-soon" id="fps-badge">OFF</span>
         </div>
         <div class="menu-item" id="menu-latency-btn">
-          <div class="menu-item-icon icon-green">⚡</div>
+          <div class="menu-item-icon icon-green">LAT</div>
           Low Latency Mode
           <span class="menu-badge badge-soon" id="latency-badge">OFF</span>
-        </div>
-        <div class="menu-item" id="menu-launcher-btn">
-          <div class="menu-item-icon icon-green">🚀</div>
-          Game Launcher
         </div>
       </div>
 
       <div class="menu-section">
         <div class="menu-section-title">Network</div>
         <div class="menu-item" id="menu-speed-btn">
-          <div class="menu-item-icon icon-blue">🌐</div>
+          <div class="menu-item-icon icon-blue">SPD</div>
           Speed Test
         </div>
         <div class="menu-item" id="menu-network-btn">
-          <div class="menu-item-icon icon-purple">🔒</div>
+          <div class="menu-item-icon icon-purple">VPN</div>
           VPN + Booster
         </div>
       </div>
 
       <div class="menu-section">
-        <div class="menu-section-title">🎨 Customize</div>
+        <div class="menu-section-title">Customize</div>
         <div class="menu-item" id="menu-custom-btn">
-          <div class="menu-item-icon icon-pink">🎨</div>
-          Themes & Fonts
+          <div class="menu-item-icon icon-pink">UI</div>
+          Themes and Fonts
         </div>
       </div>
 
       <div class="menu-section">
-        <div class="menu-section-title">AI</div>
-        <div class="menu-item coming-soon">
-          <div class="menu-item-icon icon-purple">🤖</div>
-          Claude Sidebar
-          <span class="menu-badge badge-soon">Soon</span>
+        <div class="menu-section-title">Updates</div>
+        <div class="menu-item" id="menu-update-btn">
+          <div class="menu-item-icon icon-blue">UPD</div>
+          Check for Updates
+          <span class="menu-badge badge-soon" id="update-badge">v1.0.0</span>
+        </div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Feedback</div>
+        <div class="menu-item" id="menu-feedback-btn">
+          <div class="menu-item-icon icon-orange">FB</div>
+          Send Feedback
         </div>
       </div>
 
     </div>
 
     <div class="menu-footer">
-      <p>🖤 <strong>F.Y Browser</strong><br/>Free forever · For Family<br/>Made with <span>❤️</span> by Imrane</p>
+      <p><strong>F.Y Browser</strong><br/>Free forever · For Family<br/>Made with <span>love</span> by Imrane</p>
     </div>
   </div>
 
@@ -756,19 +893,19 @@
       <div id="tracker-count">0</div>
       <div id="tracker-label">Trackers Blocked</div>
     </div>
-    <span>🛡️</span>
+    <span style="font-weight:700;color:var(--red)">BLK</span>
   </div>
 
   <!-- Tracker Panel -->
   <div id="tracker-panel">
-    <h3>🚫 Blocked Trackers</h3>
+    <h3>Blocked Trackers</h3>
     <div id="tracker-list"></div>
   </div>
 
   <!-- Download Popup -->
   <div id="download-popup">
     <div id="download-header">
-      <h4>📥 Downloads</h4>
+      <h4>Downloads</h4>
       <button id="dl-close-btn">✕</button>
     </div>
     <div id="download-list"></div>
@@ -777,7 +914,7 @@
   <!-- Speed Test -->
   <div id="speed-widget" style="position:fixed;">
     <button class="speed-close" id="speed-close-btn">✕</button>
-    <h3>📶 Speed Test</h3>
+    <h3>Network Speed Test</h3>
     <div class="speed-ring">
       <div class="speed-value" id="speed-val">--</div>
       <div class="speed-unit">Mbps</div>
@@ -786,39 +923,26 @@
     <div class="speed-grid">
       <div class="speed-card down">
         <div class="speed-card-val" id="dl-speed">--</div>
-        <div class="speed-card-label">⬇ Download</div>
+        <div class="speed-card-label">Download</div>
       </div>
       <div class="speed-card up">
         <div class="speed-card-val" id="ul-speed">--</div>
-        <div class="speed-card-label">⬆ Upload</div>
+        <div class="speed-card-label">Upload</div>
       </div>
     </div>
     <button class="speed-btn" id="speed-start-btn">Start Test</button>
   </div>
 
-  <!-- FPS Counter -->
-  <div id="fps-counter">FPS: --</div>
-
-  <!-- Game Launcher -->
-  <div id="game-launcher">
-    <div class="launcher-header">
-      <h3>🚀 Game Launcher</h3>
-      <button class="menu-close" id="launcher-close-btn">✕</button>
-    </div>
-    <div class="game-list" id="game-list"></div>
-    <button class="add-game-btn" id="add-game-btn">+ Add Game</button>
-  </div>
-
   <!-- Network Panel -->
   <div id="network-panel">
     <div class="network-panel-header">
-      <h3>📶 Network</h3>
+      <h3>Network</h3>
       <button class="menu-close" id="network-close-btn">✕</button>
     </div>
     <div class="network-card">
       <div class="network-card-header">
         <div class="network-card-title">
-          <div class="network-card-icon icon-purple">🔒</div>
+          <div class="network-card-icon icon-purple">VPN</div>
           VPN Proxy
         </div>
         <label class="toggle">
@@ -841,7 +965,7 @@
     <div class="network-card">
       <div class="network-card-header">
         <div class="network-card-title">
-          <div class="network-card-icon icon-blue">📡</div>
+          <div class="network-card-icon icon-blue">DNS</div>
           Network Booster
         </div>
         <label class="toggle">
@@ -857,64 +981,109 @@
         </div>
         <div class="stat-box">
           <div class="stat-val" id="ping-val">--</div>
-          <div class="stat-label">Ping (ms)</div>
+          <div class="stat-label">Ping ms</div>
         </div>
       </div>
-      <button class="ping-btn" id="ping-btn">🏓 Test Ping</button>
+      <button class="ping-btn" id="ping-btn">Test Ping</button>
     </div>
+  </div>
+
+  <!-- Antivirus Panel -->
+  <div id="antivirus-panel">
+    <div class="av-header">
+      <h3>Antivirus</h3>
+      <button class="menu-close" id="av-close-btn">✕</button>
+    </div>
+
+    <div class="av-status">
+      <div class="av-icon" id="av-icon">AV</div>
+      <div>
+        <div class="av-title" id="av-title">Protected</div>
+        <div class="av-sub" id="av-sub">All threats blocked</div>
+      </div>
+    </div>
+
+    <div class="network-card">
+      <div class="network-card-header">
+        <div class="network-card-title">
+          <div class="network-card-icon icon-red">URL</div>
+          Malicious URL Blocker
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="malware-toggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="network-card-desc">Blocks known dangerous and phishing websites automatically.</div>
+    </div>
+
+    <div class="network-card">
+      <div class="network-card-header">
+        <div class="network-card-title">
+          <div class="network-card-icon icon-yellow">SCN</div>
+          Download Scanner
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="scan-toggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="network-card-desc">Warns you before opening potentially dangerous downloaded files.</div>
+    </div>
+
   </div>
 
   <!-- Customization Panel -->
   <div id="custom-panel">
     <div class="custom-header">
-      <h3>🎨 Customize F.Y Browser</h3>
+      <h3>Customize F.Y Browser</h3>
       <button class="menu-close" id="custom-close-btn">✕</button>
     </div>
 
     <div class="custom-section">
-      <h4>🎨 Themes</h4>
+      <h4>Themes</h4>
       <div class="theme-grid">
         <div class="theme-btn active" data-theme="dark">
           <div class="theme-preview" style="background:#000"></div>
-          <span style="color:#fff;font-size:10px">Dark</span>
+          Dark
         </div>
         <div class="theme-btn" data-theme="light">
           <div class="theme-preview" style="background:#f5f5f5;border:1px solid #ddd"></div>
-          <span style="color:#fff;font-size:10px">Light</span>
+          Light
         </div>
         <div class="theme-btn" data-theme="purple">
           <div class="theme-preview" style="background:#0d0014"></div>
-          <span style="color:#fff;font-size:10px">Purple</span>
+          Purple
         </div>
         <div class="theme-btn" data-theme="blue">
           <div class="theme-preview" style="background:#000d1a"></div>
-          <span style="color:#fff;font-size:10px">Blue</span>
+          Blue
         </div>
         <div class="theme-btn" data-theme="red">
           <div class="theme-preview" style="background:#1a0000"></div>
-          <span style="color:#fff;font-size:10px">Red</span>
+          Red
         </div>
         <div class="theme-btn" data-theme="green">
           <div class="theme-preview" style="background:#001a00"></div>
-          <span style="color:#fff;font-size:10px">Green</span>
+          Green
         </div>
         <div class="theme-btn" data-theme="neon">
           <div class="theme-preview" style="background:#000;border:1px solid #00ff88"></div>
-          <span style="color:#fff;font-size:10px">Neon</span>
+          Neon
         </div>
         <div class="theme-btn" data-theme="galaxy">
           <div class="theme-preview" style="background:#05001a"></div>
-          <span style="color:#fff;font-size:10px">Galaxy</span>
+          Galaxy
         </div>
         <div class="theme-btn" data-theme="ocean">
           <div class="theme-preview" style="background:#000d1f"></div>
-          <span style="color:#fff;font-size:10px">Ocean</span>
+          Ocean
         </div>
       </div>
     </div>
 
     <div class="custom-section">
-      <h4>🔤 Fonts</h4>
+      <h4>Fonts</h4>
       <div class="font-grid">
         <div class="font-btn active" data-font="Inter" style="font-family:'Inter'">Inter</div>
         <div class="font-btn" data-font="Poppins" style="font-family:'Poppins'">Poppins</div>
@@ -925,7 +1094,7 @@
     </div>
 
     <div class="custom-section">
-      <h4>🎨 Custom Accent Color</h4>
+      <h4>Accent Color</h4>
       <div class="color-grid">
         <div class="color-dot" data-color="#ff4757" style="background:#ff4757"></div>
         <div class="color-dot" data-color="#2ed573" style="background:#2ed573"></div>
@@ -940,7 +1109,7 @@
     </div>
 
     <div class="custom-section">
-      <h4>⭕ Border Radius</h4>
+      <h4>Border Radius</h4>
       <div class="radius-grid">
         <button class="radius-btn" data-radius="0px">Sharp</button>
         <button class="radius-btn active" data-radius="8px">Normal</button>
@@ -949,10 +1118,96 @@
       </div>
     </div>
 
+    <div class="custom-section">
+      <h4>Own UI</h4>
+      <button class="own-ui-btn" id="own-ui-btn">Build Your Own UI</button>
+    </div>
+
   </div>
 
+  <!-- Own UI Panel -->
+  <div id="own-ui-panel">
+    <div class="own-ui-header">
+      <h3>Build Your Own UI</h3>
+      <button class="menu-close" id="own-ui-close-btn">✕</button>
+    </div>
+
+    <div class="custom-section">
+      <h4>Quick Presets</h4>
+      <div class="css-presets">
+        <button class="css-preset" id="preset-minimal">Minimal</button>
+        <button class="css-preset" id="preset-glass">Glass</button>
+        <button class="css-preset" id="preset-retro">Retro</button>
+        <button class="css-preset" id="preset-reset">Reset</button>
+      </div>
+    </div>
+
+    <div class="custom-section">
+      <h4>Custom CSS</h4>
+      <textarea class="css-editor" id="css-editor" placeholder="/* Write your custom CSS here */
+/* Example: */
+#navbar { background: red; }
+#titlebar { background: blue; }
+.tab { border-radius: 0; }"></textarea>
+    </div>
+
+    <button class="apply-css-btn" id="apply-css-btn">Apply CSS</button>
+
+  </div>
+
+  <!-- Feedback Panel -->
+  <div id="feedback-panel">
+    <div class="feedback-header">
+      <h3>Send Feedback</h3>
+      <button class="menu-close" id="feedback-close-btn">✕</button>
+    </div>
+
+    <div class="custom-section">
+      <h4>Type</h4>
+      <div class="feedback-types">
+        <div class="feedback-type active" data-type="bug">Bug Report</div>
+        <div class="feedback-type" data-type="feature">Feature Idea</div>
+        <div class="feedback-type" data-type="general">General</div>
+      </div>
+    </div>
+
+    <div class="custom-section">
+      <h4>Rating</h4>
+      <div class="feedback-rating">
+        <button class="rating-star" data-rating="1">&#9733;</button>
+        <button class="rating-star" data-rating="2">&#9733;</button>
+        <button class="rating-star" data-rating="3">&#9733;</button>
+        <button class="rating-star" data-rating="4">&#9733;</button>
+        <button class="rating-star" data-rating="5">&#9733;</button>
+      </div>
+    </div>
+
+    <textarea class="feedback-input" id="feedback-text" placeholder="Tell us what you think about F.Y Browser..."></textarea>
+
+    <button class="send-feedback-btn" id="send-feedback-btn">Send Feedback</button>
+  </div>
+
+  <!-- Update Panel -->
+  <div id="update-panel">
+    <div class="update-title" id="update-title">Update Available</div>
+    <div class="update-sub" id="update-sub">Downloading new version...</div>
+    <div class="update-bar-bg">
+      <div class="update-bar" id="update-bar"></div>
+    </div>
+    <button class="update-btn" id="update-install-btn" style="display:none">Restart to Update</button>
+  </div>
+
+  <!-- Security Alert -->
+  <div id="security-alert"></div>
+
+  <!-- FPS Counter -->
+  <div id="fps-counter" style="position:fixed;top:50px;left:12px;background:rgba(0,0,0,0.85);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--green);z-index:500;display:none;font-family:monospace;">FPS: --</div>
+
   <!-- Cookie Toast -->
-  <div id="cookie-toast">🍪 Cookies Destroyed!</div>
+  <div id="cookie-toast">Cookies Destroyed!</div>
+
+  <!-- Custom Style -->
+  <style id="custom-style"></style>
 
   <script src="renderer.js"></script>
 </body>

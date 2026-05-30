@@ -10,13 +10,14 @@ window.addEventListener('DOMContentLoaded', () => {
   let tabs = [{ id: 0, title: 'New Tab', url: 'https://www.google.com' }]
   let activeTab = 0
   let downloads = []
-  let games = JSON.parse(localStorage.getItem('fy-games') || '[]')
   let fpsActive = false
   let latencyActive = false
   let fpsInterval = null
   let lastTime = performance.now()
   let frames = 0
   let adBlockOn = true
+  let feedbackType = 'bug'
+  let feedbackRating = 0
 
   // ─── TABS ──────────────────────────────────────────
 
@@ -25,7 +26,7 @@ window.addEventListener('DOMContentLoaded', () => {
     tabs.forEach(tab => {
       const el = document.createElement('div')
       el.className = 'tab' + (tab.id === activeTab ? ' active' : '')
-      el.innerHTML = `<span>${tab.title}</span><button class="tab-close">✕</button>`
+      el.innerHTML = `<span>${tab.title}</span><button class="tab-close">x</button>`
       el.querySelector('.tab-close').addEventListener('click', (e) => {
         e.stopPropagation()
         closeTab(tab.id)
@@ -80,7 +81,7 @@ window.addEventListener('DOMContentLoaded', () => {
     urlBar.value = e.url
     const tab = tabs.find(t => t.id === activeTab)
     if (tab) tab.url = e.url
-    document.getElementById('url-icon').textContent = e.url.startsWith('https') ? '🔒' : '🔍'
+    document.getElementById('url-icon').textContent = e.url.startsWith('https') ? 'HTTPS' : 'HTTP'
   })
 
   webview.addEventListener('page-title-updated', (e) => {
@@ -106,22 +107,17 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('overlay').classList.remove('show')
   }
 
-  document.getElementById('menu-btn').addEventListener('click', toggleMenu)
-  document.getElementById('menu-close-btn').addEventListener('click', closeMenu)
-  document.getElementById('overlay').addEventListener('click', () => {
-    closeMenu()
-    closeAllPanels()
-  })
-
-  // ─── CLOSE ALL PANELS ──────────────────────────────
-
   function closeAllPanels() {
-    document.getElementById('network-panel').classList.remove('show')
-    document.getElementById('speed-widget').classList.remove('show')
-    document.getElementById('game-launcher').classList.remove('show')
-    document.getElementById('custom-panel').classList.remove('show')
+    ['network-panel', 'speed-widget', 'custom-panel', 'antivirus-panel',
+     'feedback-panel', 'own-ui-panel'].forEach(id => {
+      document.getElementById(id).classList.remove('show')
+    })
     document.getElementById('overlay').classList.remove('show')
   }
+
+  document.getElementById('menu-btn').addEventListener('click', toggleMenu)
+  document.getElementById('menu-close-btn').addEventListener('click', closeMenu)
+  document.getElementById('overlay').addEventListener('click', () => { closeMenu(); closeAllPanels() })
 
   // ─── TRACKER ───────────────────────────────────────
 
@@ -132,26 +128,22 @@ window.addEventListener('DOMContentLoaded', () => {
 
   function toggleTrackerPanel() {
     const panel = document.getElementById('tracker-panel')
-    if (panel.style.display === 'block') {
-      panel.style.display = 'none'
-    } else {
-      panel.style.display = 'block'
-      ipcRenderer.send('get-trackers')
-    }
+    panel.style.display = panel.style.display === 'block' ? 'none' : 'block'
+    if (panel.style.display === 'block') ipcRenderer.send('get-trackers')
   }
 
   ipcRenderer.on('tracker-list', (e, list) => {
     const container = document.getElementById('tracker-list')
     if (list.length === 0) {
-      container.innerHTML = '<div class="tracker-item">✅ No trackers yet!</div>'
+      container.innerHTML = '<div class="tracker-item">No trackers yet</div>'
       return
     }
     container.innerHTML = list.slice(-20).reverse().map(url => {
       try {
         const domain = new URL(url).hostname
-        return `<div class="tracker-item"><span>🚫</span>${domain}</div>`
+        return `<div class="tracker-item">BLOCKED: ${domain}</div>`
       } catch {
-        return `<div class="tracker-item"><span>🚫</span>${url}</div>`
+        return `<div class="tracker-item">BLOCKED: ${url}</div>`
       }
     }).join('')
   })
@@ -175,13 +167,56 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('menu-adblock-btn').addEventListener('click', () => {
     adBlockOn = !adBlockOn
     ipcRenderer.send('toggle-adblock', adBlockOn)
-    showToast(adBlockOn ? '🚫 Ad Blocker ON' : '✅ Ad Blocker OFF', adBlockOn ? '#2ed573' : '#ff4757')
+    showToast(adBlockOn ? 'Ad Blocker ON' : 'Ad Blocker OFF', adBlockOn ? '#2ed573' : '#ff4757')
     closeMenu()
+  })
+
+  // ─── ANTIVIRUS ─────────────────────────────────────
+
+  ipcRenderer.send('get-malware-state')
+  ipcRenderer.send('get-scan-state')
+
+  ipcRenderer.on('malware-state', (e, state) => {
+    document.getElementById('malware-toggle').checked = state
+  })
+
+  ipcRenderer.on('scan-state', (e, state) => {
+    document.getElementById('scan-toggle').checked = state
+  })
+
+  ipcRenderer.on('malware-detected', (e, url) => {
+    showAlert('THREAT BLOCKED: Dangerous website blocked - ' + url)
+    showToast('Threat Blocked!', '#ff4757')
+  })
+
+  ipcRenderer.on('download-warning', (e, fileName) => {
+    showAlert('WARNING: Potentially dangerous file - ' + fileName + ' - Open with caution!')
+  })
+
+  document.getElementById('malware-toggle').addEventListener('change', (e) => {
+    ipcRenderer.send('toggle-malware', e.target.checked)
+    showToast(e.target.checked ? 'URL Blocker ON' : 'URL Blocker OFF', e.target.checked ? '#2ed573' : '#ff4757')
+  })
+
+  document.getElementById('scan-toggle').addEventListener('change', (e) => {
+    ipcRenderer.send('toggle-download-scan', e.target.checked)
+    showToast(e.target.checked ? 'Download Scanner ON' : 'Download Scanner OFF', e.target.checked ? '#2ed573' : '#ff4757')
+  })
+
+  document.getElementById('menu-antivirus-btn').addEventListener('click', () => {
+    document.getElementById('antivirus-panel').classList.add('show')
+    document.getElementById('overlay').classList.add('show')
+    closeMenu()
+  })
+
+  document.getElementById('av-close-btn').addEventListener('click', () => {
+    document.getElementById('antivirus-panel').classList.remove('show')
+    document.getElementById('overlay').classList.remove('show')
   })
 
   // ─── COOKIE DESTROYER ──────────────────────────────
 
-  function showCookieToast() { showToast('🍪 Cookies Destroyed!', '#2ed573') }
+  function showCookieToast() { showToast('Cookies Destroyed!', '#2ed573') }
 
   document.getElementById('menu-cookie-btn').addEventListener('click', () => {
     ipcRenderer.send('tab-closed')
@@ -215,13 +250,13 @@ window.addEventListener('DOMContentLoaded', () => {
       <div class="dl-item">
         <div class="dl-name">
           <span>${dl.name.slice(0, 28)}${dl.name.length > 28 ? '...' : ''}</span>
-          <span>${dl.status === 'done' ? '✅' : dl.status === 'failed' ? '❌' : dl.progress + '%'}</span>
+          <span>${dl.status === 'done' ? 'Done' : dl.status === 'failed' ? 'Failed' : dl.progress + '%'}</span>
         </div>
         <div class="dl-bar-bg">
           <div class="dl-bar ${dl.status === 'done' ? 'done' : dl.status === 'failed' ? 'failed' : ''}" style="width:${dl.progress}%"></div>
         </div>
         <div class="dl-actions">
-          ${dl.status === 'done' ? `<button onclick="window._openFile('${dl.path.replace(/\\/g, '\\\\')}')">📂 Open</button>` : ''}
+          ${dl.status === 'done' ? `<button onclick="window._openFile('${dl.path.replace(/\\/g, '\\\\')}')">Open</button>` : ''}
           <span class="dl-size">${formatSize(dl.size)}</span>
         </div>
       </div>
@@ -263,7 +298,7 @@ window.addEventListener('DOMContentLoaded', () => {
       fpsInterval = setInterval(() => {
         const now = performance.now()
         const fps = Math.round(frames * 1000 / (now - lastTime))
-        counter.textContent = `FPS: ${fps}`
+        counter.textContent = 'FPS: ' + fps
         counter.style.color = fps >= 55 ? '#2ed573' : fps >= 30 ? '#ffa502' : '#ff4757'
         frames = 0
         lastTime = now
@@ -290,53 +325,10 @@ window.addEventListener('DOMContentLoaded', () => {
     badge.textContent = latencyActive ? 'ON' : 'OFF'
     badge.style.background = latencyActive ? 'rgba(46,213,115,0.2)' : ''
     badge.style.color = latencyActive ? '#2ed573' : ''
-    showToast(latencyActive ? '⚡ Low Latency ON' : '⚡ Low Latency OFF', latencyActive ? '#2ed573' : '#888888')
+    showToast(latencyActive ? 'Low Latency ON' : 'Low Latency OFF', latencyActive ? '#2ed573' : '#888888')
   }
 
   document.getElementById('menu-latency-btn').addEventListener('click', () => { toggleLatency(); closeMenu() })
-
-  // ─── GAME LAUNCHER ─────────────────────────────────
-
-  function renderGames() {
-    const list = document.getElementById('game-list')
-    if (games.length === 0) {
-      list.innerHTML = '<div style="color:#444;font-size:12px;text-align:center;padding:16px">No games added yet</div>'
-      return
-    }
-    list.innerHTML = games.map((g, i) => `
-      <div class="game-item" onclick="window._launchGame(${i})">
-        <div class="game-icon">🎮</div>
-        <div>
-          <div class="game-name">${g.name}</div>
-          <div class="game-path">${g.path.slice(-40)}</div>
-        </div>
-      </div>
-    `).join('')
-  }
-
-  window._launchGame = (i) => ipcRenderer.send('launch-game', games[i].path)
-
-  document.getElementById('menu-launcher-btn').addEventListener('click', () => {
-    document.getElementById('game-launcher').classList.add('show')
-    document.getElementById('overlay').classList.add('show')
-    renderGames()
-    closeMenu()
-  })
-
-  document.getElementById('launcher-close-btn').addEventListener('click', () => {
-    document.getElementById('game-launcher').classList.remove('show')
-    document.getElementById('overlay').classList.remove('show')
-  })
-
-  document.getElementById('add-game-btn').addEventListener('click', () => {
-    const name = prompt('Game name?')
-    if (!name) return
-    const path = prompt('Full path to .exe?')
-    if (!path) return
-    games.push({ name, path })
-    localStorage.setItem('fy-games', JSON.stringify(games))
-    renderGames()
-  })
 
   // ─── NETWORK SPEED TEST ────────────────────────────
 
@@ -373,9 +365,9 @@ window.addEventListener('DOMContentLoaded', () => {
       await new Promise(r => setTimeout(r, 1500))
       const ulResult = (dlResult * (0.3 + Math.random() * 0.4)).toFixed(1)
       ulSpeed.textContent = ulResult
-      label.textContent = '✅ Done!'
+      label.textContent = 'Done!'
     } catch {
-      label.textContent = '❌ Test failed'
+      label.textContent = 'Test failed'
       val.textContent = '--'
     }
     btn.disabled = false
@@ -406,7 +398,6 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('overlay').classList.remove('show')
   })
 
-  // VPN
   ipcRenderer.send('get-vpn-state')
   ipcRenderer.on('vpn-state', (e, state) => {
     document.getElementById('vpn-toggle').checked = state
@@ -420,10 +411,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('vpn-toggle').addEventListener('change', (e) => {
     ipcRenderer.send('toggle-vpn', e.target.checked)
-    showToast(e.target.checked ? '🔒 VPN ON' : '🔒 VPN OFF', e.target.checked ? '#5352ed' : '#888888')
+    showToast(e.target.checked ? 'VPN ON' : 'VPN OFF', e.target.checked ? '#5352ed' : '#888888')
   })
 
-  // Booster
   ipcRenderer.send('get-booster-state')
   ipcRenderer.on('booster-state', (e, state) => {
     document.getElementById('booster-toggle').checked = state
@@ -434,10 +424,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('booster-toggle').addEventListener('change', (e) => {
     ipcRenderer.send('toggle-booster', e.target.checked)
-    showToast(e.target.checked ? '📡 Booster ON' : '📡 Booster OFF', e.target.checked ? '#2ed573' : '#888888')
+    showToast(e.target.checked ? 'Booster ON' : 'Booster OFF', e.target.checked ? '#2ed573' : '#888888')
   })
 
-  // Ping
   document.getElementById('ping-btn').addEventListener('click', () => {
     const btn = document.getElementById('ping-btn')
     const pingVal = document.getElementById('ping-val')
@@ -450,7 +439,7 @@ window.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('ping-result', (e, ping) => {
     const btn = document.getElementById('ping-btn')
     const pingVal = document.getElementById('ping-val')
-    btn.textContent = '🏓 Test Ping'
+    btn.textContent = 'Test Ping'
     btn.disabled = false
     pingVal.textContent = ping
     pingVal.className = ping < 50 ? 'stat-val good' : ping < 100 ? 'stat-val ok' : 'stat-val bad'
@@ -458,16 +447,17 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // ─── CUSTOMIZATION ─────────────────────────────────
 
-  // Load saved settings
   const savedTheme = localStorage.getItem('fy-theme') || 'dark'
   const savedFont = localStorage.getItem('fy-font') || 'Inter'
   const savedRadius = localStorage.getItem('fy-radius') || '8px'
   const savedAccent = localStorage.getItem('fy-accent') || null
+  const savedCSS = localStorage.getItem('fy-custom-css') || ''
 
   applyTheme(savedTheme)
   applyFont(savedFont)
   applyRadius(savedRadius)
   if (savedAccent) applyAccent(savedAccent)
+  if (savedCSS) document.getElementById('custom-style').textContent = savedCSS
 
   function applyTheme(theme) {
     document.body.className = document.body.className.replace(/theme-\w+/g, '')
@@ -487,12 +477,10 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   function applyRadius(radius) {
-    document.querySelectorAll('.nav-btn, .tab, .menu-item, .dl-item, .network-card, #side-menu').forEach(el => {
-      el.style.borderRadius = radius
-    })
     document.querySelectorAll('.radius-btn').forEach(b => {
       b.classList.toggle('active', b.dataset.radius === radius)
     })
+    document.documentElement.style.setProperty('--radius', radius)
     localStorage.setItem('fy-radius', radius)
   }
 
@@ -502,22 +490,18 @@ window.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('fy-accent', color)
   }
 
-  // Theme buttons
   document.querySelectorAll('.theme-btn').forEach(btn => {
     btn.addEventListener('click', () => applyTheme(btn.dataset.theme))
   })
 
-  // Font buttons
   document.querySelectorAll('.font-btn').forEach(btn => {
     btn.addEventListener('click', () => applyFont(btn.dataset.font))
   })
 
-  // Radius buttons
   document.querySelectorAll('.radius-btn').forEach(btn => {
     btn.addEventListener('click', () => applyRadius(btn.dataset.radius))
   })
 
-  // Color dots
   document.querySelectorAll('.color-dot').forEach(dot => {
     dot.addEventListener('click', () => {
       document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'))
@@ -526,12 +510,10 @@ window.addEventListener('DOMContentLoaded', () => {
     })
   })
 
-  // Custom color picker
   document.getElementById('custom-color').addEventListener('input', (e) => {
     applyAccent(e.target.value)
   })
 
-  // Open/close customization panel
   document.getElementById('menu-custom-btn').addEventListener('click', () => {
     document.getElementById('custom-panel').classList.add('show')
     document.getElementById('overlay').classList.add('show')
@@ -543,33 +525,174 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('overlay').classList.remove('show')
   })
 
+  // ─── OWN UI ────────────────────────────────────────
+
+  document.getElementById('own-ui-btn').addEventListener('click', () => {
+    document.getElementById('own-ui-panel').classList.add('show')
+    document.getElementById('css-editor').value = localStorage.getItem('fy-custom-css') || ''
+  })
+
+  document.getElementById('own-ui-close-btn').addEventListener('click', () => {
+    document.getElementById('own-ui-panel').classList.remove('show')
+  })
+
+  document.getElementById('apply-css-btn').addEventListener('click', () => {
+    const css = document.getElementById('css-editor').value
+    document.getElementById('custom-style').textContent = css
+    localStorage.setItem('fy-custom-css', css)
+    showToast('Custom CSS Applied!', '#5352ed')
+  })
+
+  // CSS Presets
+  document.getElementById('preset-minimal').addEventListener('click', () => {
+    document.getElementById('css-editor').value = `
+#titlebar { background: #fff; border-bottom: 1px solid #eee; }
+#navbar { background: #fff; border-bottom: 1px solid #eee; }
+#tabs { background: #fff; }
+.tab { background: #f5f5f5; color: #333; }
+.tab.active { background: #fff; color: #000; }
+#side-menu { background: #fff; }
+.menu-item { color: #333; }
+.menu-item:hover { background: #f5f5f5; color: #000; }
+    `.trim()
+  })
+
+  document.getElementById('preset-glass').addEventListener('click', () => {
+    document.getElementById('css-editor').value = `
+#titlebar { background: rgba(0,0,0,0.3); backdrop-filter: blur(20px); }
+#navbar { background: rgba(0,0,0,0.2); backdrop-filter: blur(20px); }
+#tabs { background: rgba(0,0,0,0.1); }
+.tab { background: rgba(255,255,255,0.1); }
+.tab.active { background: rgba(255,255,255,0.2); }
+#side-menu { background: rgba(0,0,0,0.5); backdrop-filter: blur(20px); }
+    `.trim()
+  })
+
+  document.getElementById('preset-retro').addEventListener('click', () => {
+    document.getElementById('css-editor').value = `
+* { font-family: 'Courier New', monospace !important; }
+#titlebar { background: #003300; border-bottom: 2px solid #00ff00; }
+#navbar { background: #001100; border-bottom: 2px solid #00ff00; }
+#tabs { background: #003300; }
+.tab { background: #002200; color: #00ff00; border-color: #00ff00; }
+.tab.active { background: #004400; color: #00ff00; }
+#url-bar { background: #001100; color: #00ff00; border-color: #00ff00; }
+#side-menu { background: #001100; border-left: 2px solid #00ff00; }
+    `.trim()
+  })
+
+  document.getElementById('preset-reset').addEventListener('click', () => {
+    document.getElementById('css-editor').value = ''
+    document.getElementById('custom-style').textContent = ''
+    localStorage.removeItem('fy-custom-css')
+    showToast('CSS Reset!', '#2ed573')
+  })
+
+  // ─── FEEDBACK ──────────────────────────────────────
+
+  document.getElementById('menu-feedback-btn').addEventListener('click', () => {
+    document.getElementById('feedback-panel').classList.add('show')
+    document.getElementById('overlay').classList.add('show')
+    closeMenu()
+  })
+
+  document.getElementById('feedback-close-btn').addEventListener('click', () => {
+    document.getElementById('feedback-panel').classList.remove('show')
+    document.getElementById('overlay').classList.remove('show')
+  })
+
+  document.querySelectorAll('.feedback-type').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.feedback-type').forEach(b => b.classList.remove('active'))
+      btn.classList.add('active')
+      feedbackType = btn.dataset.type
+    })
+  })
+
+  document.querySelectorAll('.rating-star').forEach(star => {
+    star.addEventListener('click', () => {
+      feedbackRating = parseInt(star.dataset.rating)
+      document.querySelectorAll('.rating-star').forEach((s, i) => {
+        s.classList.toggle('active', i < feedbackRating)
+      })
+    })
+  })
+
+  document.getElementById('send-feedback-btn').addEventListener('click', () => {
+    const text = document.getElementById('feedback-text').value.trim()
+    if (!text) { showToast('Please write your feedback!', '#ff4757'); return }
+    ipcRenderer.send('send-feedback', {
+      type: feedbackType,
+      rating: feedbackRating,
+      text: text
+    })
+  })
+
+  ipcRenderer.on('feedback-sent', () => {
+    document.getElementById('feedback-text').value = ''
+    document.getElementById('feedback-panel').classList.remove('show')
+    document.getElementById('overlay').classList.remove('show')
+    showToast('Feedback sent! Thank you!', '#2ed573')
+  })
+
   // ─── AUTO UPDATE ───────────────────────────────────
 
-  ipcRenderer.on('update-available', () => {
-    showToast('🔄 Update downloading...', '#5352ed')
+  document.getElementById('menu-update-btn').addEventListener('click', () => {
+    ipcRenderer.send('check-update')
+    showToast('Checking for updates...', '#5352ed')
+    closeMenu()
+  })
+
+  ipcRenderer.on('update-available', (e, version) => {
+    const panel = document.getElementById('update-panel')
+    document.getElementById('update-title').textContent = 'Update Available - v' + version
+    document.getElementById('update-sub').textContent = 'Downloading in background...'
+    document.getElementById('update-badge').textContent = 'NEW'
+    document.getElementById('update-badge').style.background = 'rgba(46,213,115,0.2)'
+    document.getElementById('update-badge').style.color = '#2ed573'
+    panel.classList.add('show')
+  })
+
+  ipcRenderer.on('update-not-available', () => {
+    showToast('You are on the latest version!', '#2ed573')
+  })
+
+  ipcRenderer.on('update-progress', (e, percent) => {
+    document.getElementById('update-bar').style.width = percent + '%'
+    document.getElementById('update-sub').textContent = 'Downloading... ' + percent + '%'
   })
 
   ipcRenderer.on('update-downloaded', () => {
-    const toast = document.getElementById('cookie-toast')
-    toast.textContent = '✅ Update ready! Click to restart'
-    toast.style.background = '#5352ed'
-    toast.style.color = 'white'
-    toast.style.display = 'block'
-    toast.style.cursor = 'pointer'
-    toast.onclick = () => ipcRenderer.send('restart-app')
+    document.getElementById('update-title').textContent = 'Update Ready!'
+    document.getElementById('update-sub').textContent = 'Click restart to install'
+    document.getElementById('update-bar').style.width = '100%'
+    document.getElementById('update-install-btn').style.display = 'block'
   })
 
-  // ─── TOAST ─────────────────────────────────────────
+  document.getElementById('update-install-btn').addEventListener('click', () => {
+    ipcRenderer.send('restart-app')
+  })
+
+  ipcRenderer.on('restart-app', () => { ipcRenderer.send('restart-app') })
+
+  // ─── TOAST + ALERT ─────────────────────────────────
 
   function showToast(msg, color = '#2ed573') {
     const toast = document.getElementById('cookie-toast')
     toast.textContent = msg
     toast.style.background = color
-    toast.style.color = color === '#888888' ? '#fff' : '#000'
+    toast.style.color = (color === '#888888' || color === '#5352ed') ? '#fff' : '#000'
     toast.style.display = 'block'
     toast.style.cursor = 'default'
     toast.onclick = null
-    setTimeout(() => toast.style.display = 'none', 2000)
+    setTimeout(() => toast.style.display = 'none', 2500)
+  }
+
+  function showAlert(msg) {
+    const alert = document.getElementById('security-alert')
+    alert.textContent = msg
+    alert.style.display = 'block'
+    setTimeout(() => alert.style.display = 'none', 4000)
   }
 
   // ─── NEW TAB ───────────────────────────────────────
