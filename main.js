@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, session, shell } = require('electron')
+const { autoUpdater } = require('electron-updater')
 const path = require('path')
 const { exec } = require('child_process')
 
@@ -40,6 +41,21 @@ app.whenReady().then(() => {
   })
 
   mainWindow.loadFile('index.html')
+
+  // ── AUTO UPDATER ──
+  autoUpdater.checkForUpdatesAndNotify()
+
+  autoUpdater.on('update-available', () => {
+    mainWindow.webContents.send('update-available')
+  })
+
+  autoUpdater.on('update-downloaded', () => {
+    mainWindow.webContents.send('update-downloaded')
+  })
+
+  autoUpdater.on('error', (err) => {
+    console.log('Update error:', err)
+  })
 
   // ── TRACKER + AD BLOCKER ──
   session.defaultSession.webRequest.onBeforeRequest((details, callback) => {
@@ -183,4 +199,9 @@ ipcMain.on('ping-test', (e) => {
     const ping = Date.now() - start
     e.reply('ping-result', ping)
   })
+})
+
+// ── AUTO UPDATE ──
+ipcMain.on('restart-app', () => {
+  autoUpdater.quitAndInstall()
 })

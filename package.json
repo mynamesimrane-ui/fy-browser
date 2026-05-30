@@ -25,7 +25,9 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ]
     },
@@ -33,7 +35,10 @@
       "target": [
         {
           "target": "dmg",
-          "arch": ["x64", "arm64"]
+          "arch": [
+            "x64",
+            "arm64"
+          ]
         }
       ],
       "category": "public.app-category.utilities"
@@ -45,5 +50,8 @@
       "Style.css",
       "package.json"
     ]
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.3"
   }
 }
