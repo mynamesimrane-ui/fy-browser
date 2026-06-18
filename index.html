@@ -4,66 +4,58 @@
   <meta charset="UTF-8">
   <title>F.Y Browser</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&family=Roboto:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Nunito:wght@300;400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #000000;
-      --bg2: #0a0a0a;
-      --bg3: #111111;
-      --bg4: #1a1a1a;
-      --border: #222222;
+      --bg: #0f0f0f;
+      --bg2: #1a1a1a;
+      --bg3: #222222;
+      --bg4: #2a2a2a;
+      --border: #2e2e2e;
       --text: #ffffff;
       --text2: #888888;
       --text3: #444444;
-      --accent2: #333333;
+      --accent: #ffffff;
       --red: #ff4757;
       --green: #2ed573;
       --blue: #5352ed;
       --yellow: #ffa502;
+      --orange: #ff6b35;
       --font: 'Inter', sans-serif;
+      --radius: 8px;
     }
 
+    /* ── THEMES ── */
     body.theme-light {
-      --bg: #f5f5f5; --bg2: #ffffff; --bg3: #eeeeee;
-      --bg4: #e0e0e0; --border: #dddddd; --text: #111111;
-      --text2: #555555; --text3: #aaaaaa; --accent2: #cccccc;
+      --bg: #f0f0f0; --bg2: #ffffff; --bg3: #e8e8e8;
+      --bg4: #d8d8d8; --border: #cccccc; --text: #111111;
+      --text2: #555555; --text3: #aaaaaa;
     }
     body.theme-purple {
-      --bg: #0d0014; --bg2: #130020; --bg3: #1a0030;
-      --bg4: #220040; --border: #3a0060; --text: #ffffff;
-      --text2: #aa88cc; --accent2: #6600aa;
+      --bg: #0d0014; --bg2: #150020; --bg3: #1e0030;
+      --bg4: #280040; --border: #400060; --text: #ffffff; --text2: #aa88cc;
     }
     body.theme-blue {
-      --bg: #000d1a; --bg2: #001428; --bg3: #001e3c;
-      --bg4: #002850; --border: #003870; --text: #ffffff;
-      --text2: #7799bb; --accent2: #0044aa;
+      --bg: #00080f; --bg2: #001220; --bg3: #001c33;
+      --bg4: #002848; --border: #003870; --text: #ffffff; --text2: #6699bb;
     }
     body.theme-red {
-      --bg: #1a0000; --bg2: #280000; --bg3: #3c0000;
-      --bg4: #500000; --border: #700000; --text: #ffffff;
-      --text2: #bb7777; --accent2: #aa0000;
+      --bg: #0f0000; --bg2: #1a0000; --bg3: #280000;
+      --bg4: #380000; --border: #550000; --text: #ffffff; --text2: #aa6666;
     }
     body.theme-green {
-      --bg: #001a00; --bg2: #002800; --bg3: #003c00;
-      --bg4: #005000; --border: #007000; --text: #ffffff;
-      --text2: #77bb77; --accent2: #00aa00;
+      --bg: #00100a; --bg2: #001a10; --bg3: #002818;
+      --bg4: #003820; --border: #005030; --text: #ffffff; --text2: #66aa88;
     }
     body.theme-neon {
       --bg: #000000; --bg2: #050505; --bg3: #0a0a0a;
-      --bg4: #111111; --border: #00ff88; --text: #00ff88;
-      --text2: #00aa55; --accent2: #00ff88;
+      --bg4: #111111; --border: #00ff88; --text: #00ff88; --text2: #00aa55;
     }
     body.theme-galaxy {
-      --bg: #05001a; --bg2: #080028; --bg3: #0d003c;
-      --bg4: #120050; --border: #2200aa; --text: #ffffff;
-      --text2: #9988ff; --accent2: #4400ff;
-    }
-    body.theme-ocean {
-      --bg: #000d1f; --bg2: #001530; --bg3: #001f45;
-      --bg4: #002860; --border: #004499; --text: #ffffff;
-      --text2: #6699cc; --accent2: #0066cc;
+      --bg: #04001a; --bg2: #07002a; --bg3: #0d003c;
+      --bg4: #120050; --border: #2200aa; --text: #ffffff; --text2: #9988ff;
     }
 
     body {
@@ -74,17 +66,17 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      transition: background 0.3s, color 0.3s;
+      transition: background 0.2s, color 0.2s;
     }
 
     /* ── TITLEBAR ── */
     #titlebar {
       background: var(--bg);
-      height: 40px;
+      height: 38px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      padding: 0 12px;
       -webkit-app-region: drag;
       border-bottom: 1px solid var(--border);
       flex-shrink: 0;
@@ -93,653 +85,1058 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 14px;
+      gap: 7px;
+      font-size: 13px;
       font-weight: 700;
-      color: var(--text);
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
 
-    .brand-fy {
+    .brand-badge {
       background: var(--text);
       color: var(--bg);
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-size: 13px;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 12px;
       font-weight: 800;
       letter-spacing: 2px;
     }
 
-    .brand-sub { font-size: 11px; color: var(--text2); font-weight: 400; }
+    .brand-sub { font-size: 11px; color: var(--text3); font-weight: 400; }
 
-    .win-btns { display: flex; gap: 6px; -webkit-app-region: no-drag; }
+    .win-btns { display: flex; gap: 5px; -webkit-app-region: no-drag; }
 
     .win-btn {
-      width: 28px; height: 28px;
-      border-radius: 8px; border: none;
-      background: var(--bg3); color: var(--text2);
-      font-size: 12px; cursor: pointer;
+      width: 26px; height: 26px;
+      border-radius: 6px; border: none;
+      background: transparent; color: var(--text2);
+      font-size: 13px; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: all 0.15s;
     }
 
-    .win-btn:hover { background: var(--bg4); color: var(--text); }
-    #close-btn:hover { background: var(--red) !important; color: white !important; }
+    .win-btn:hover { background: var(--bg3); color: var(--text); }
+    #close-btn:hover { background: var(--red) !important; color: #fff !important; }
 
     /* ── TABS ── */
     #tabs {
       background: var(--bg);
-      display: flex; align-items: flex-end;
-      padding: 8px 12px 0; gap: 4px;
-      overflow-x: auto; flex-shrink: 0;
+      display: flex;
+      align-items: flex-end;
+      padding: 6px 10px 0;
+      gap: 3px;
+      overflow-x: auto;
+      flex-shrink: 0;
       scrollbar-width: none;
+      min-height: 38px;
     }
 
     #tabs::-webkit-scrollbar { display: none; }
 
     .tab {
       background: var(--bg3);
-      border-radius: 10px 10px 0 0;
-      padding: 7px 14px; font-size: 12px; font-weight: 500;
-      cursor: pointer; display: flex; align-items: center; gap: 8px;
-      min-width: 130px; max-width: 200px;
-      color: var(--text2); transition: all 0.15s;
-      border: 1px solid transparent; border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 120px;
+      max-width: 220px;
+      color: var(--text2);
+      transition: all 0.12s;
+      border: 1px solid transparent;
+      border-bottom: none;
+      flex-shrink: 0;
     }
 
     .tab:hover { background: var(--bg4); color: var(--text); }
-    .tab.active { background: var(--bg2); color: var(--text); border-color: var(--border); }
-    .tab span:first-child { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .tab.active {
+      background: var(--bg2);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .tab.private { border-top: 2px solid #a29bfe; }
+
+    .tab-favicon {
+      width: 14px; height: 14px;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+
+    .tab-title {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    .tab-private-icon {
+      font-size: 10px;
+      color: #a29bfe;
+      flex-shrink: 0;
+    }
 
     .tab-close {
-      background: none; border: none; color: var(--text3);
-      cursor: pointer; font-size: 12px; padding: 2px 4px;
-      border-radius: 4px; transition: all 0.15s; flex-shrink: 0;
+      background: none; border: none;
+      color: var(--text3); cursor: pointer;
+      font-size: 11px; padding: 2px 3px;
+      border-radius: 4px; transition: all 0.12s;
+      flex-shrink: 0; line-height: 1;
     }
 
-    .tab-close:hover { background: var(--red); color: white; }
+    .tab-close:hover { background: var(--red); color: #fff; }
 
-    #new-tab {
-      background: none; border: none; color: var(--text3);
-      font-size: 18px; cursor: pointer; padding: 6px 10px;
-      border-radius: 8px; transition: all 0.15s;
+    #new-tab-btn {
+      background: none; border: none;
+      color: var(--text3); font-size: 18px;
+      cursor: pointer; padding: 4px 8px;
+      border-radius: 7px; transition: all 0.12s;
       align-self: center; margin-bottom: 4px;
+      flex-shrink: 0;
     }
 
-    #new-tab:hover { background: var(--bg3); color: var(--text); }
+    #new-tab-btn:hover { background: var(--bg3); color: var(--text); }
 
     /* ── NAVBAR ── */
     #navbar {
       background: var(--bg2);
-      padding: 10px 14px; display: flex;
-      align-items: center; gap: 8px;
-      border-bottom: 1px solid var(--border); flex-shrink: 0;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
     }
 
     .nav-btn {
-      width: 32px; height: 32px;
-      background: var(--bg3); border: 1px solid var(--border);
-      color: var(--text2); font-size: 13px; cursor: pointer;
-      border-radius: 8px; display: flex; align-items: center;
-      justify-content: center; transition: all 0.15s; flex-shrink: 0;
-      font-family: var(--font); font-weight: 600;
+      width: 30px; height: 30px;
+      background: transparent;
+      border: none;
+      color: var(--text2);
+      font-size: 15px;
+      cursor: pointer;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.12s;
+      flex-shrink: 0;
     }
 
-    .nav-btn:hover { background: var(--bg4); color: var(--text); }
+    .nav-btn:hover { background: var(--bg3); color: var(--text); }
+    .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .nav-btn:disabled:hover { background: transparent; color: var(--text2); }
 
-    #url-wrap { flex: 1; position: relative; display: flex; align-items: center; }
-    #url-icon { position: absolute; left: 12px; color: var(--text3); font-size: 11px; font-weight: 600; }
+    .nav-sep {
+      width: 1px;
+      height: 18px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    /* URL Bar */
+    #url-wrap {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    #url-prefix {
+      position: absolute;
+      left: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text3);
+      pointer-events: none;
+      letter-spacing: 0.5px;
+    }
+
+    #url-prefix.secure { color: var(--green); }
 
     #url-bar {
-      width: 100%; background: var(--bg3);
-      border: 1px solid var(--border); border-radius: 10px;
-      padding: 8px 16px 8px 36px; color: var(--text);
-      font-size: 13px; font-family: var(--font);
-      outline: none; transition: all 0.2s;
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 7px 14px 7px 52px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: var(--font);
+      outline: none;
+      transition: all 0.2s;
     }
 
-    #url-bar:focus { border-color: var(--accent2); background: var(--bg4); }
+    #url-bar:focus {
+      border-color: #555;
+      background: var(--bg4);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.04);
+    }
+
     #url-bar::placeholder { color: var(--text3); }
 
+    /* Shield count in URL bar */
+    #shield-count {
+      position: absolute;
+      right: 10px;
+      background: var(--red);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      display: none;
+    }
+
+    /* ── BOOKMARKS BAR ── */
+    #bookmarks-bar {
+      background: var(--bg2);
+      padding: 4px 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      min-height: 32px;
+    }
+
+    #bookmarks-bar::-webkit-scrollbar { display: none; }
+    #bookmarks-bar.hidden { display: none; }
+
+    .bookmark-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text2);
+      background: none;
+      border: none;
+      font-family: var(--font);
+      transition: all 0.12s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .bookmark-btn:hover { background: var(--bg3); color: var(--text); }
+
+    .bookmark-remove {
+      font-size: 10px;
+      color: var(--text3);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0 2px;
+      display: none;
+      line-height: 1;
+    }
+
+    .bookmark-btn:hover .bookmark-remove { display: inline; }
+    .bookmark-remove:hover { color: var(--red); }
+
+    #bookmarks-empty {
+      font-size: 11px;
+      color: var(--text3);
+      padding: 2px 4px;
+    }
+
+    /* ── FIND BAR ── */
+    #find-bar {
+      background: var(--bg2);
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    #find-bar.hidden { display: none; }
+
+    #find-input {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 10px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: var(--font);
+      outline: none;
+      width: 220px;
+      transition: border-color 0.2s;
+    }
+
+    #find-input:focus { border-color: #555; }
+
+    #find-count {
+      font-size: 11px;
+      color: var(--text2);
+      min-width: 60px;
+    }
+
+    .find-btn {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text2);
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: var(--font);
+      transition: all 0.12s;
+    }
+
+    .find-btn:hover { background: var(--bg4); color: var(--text); }
+
     /* ── BROWSER VIEW ── */
-    #browser-view { flex: 1; display: flex; overflow: hidden; }
+    #browser-view { flex: 1; display: flex; overflow: hidden; position: relative; }
     webview { flex: 1; width: 100%; }
+
+    /* Reader Mode Overlay */
+    #reader-overlay {
+      position: absolute;
+      inset: 0;
+      background: #fafafa;
+      color: #111;
+      overflow-y: auto;
+      display: none;
+      z-index: 100;
+      padding: 0;
+    }
+
+    #reader-overlay.show { display: block; }
+
+    #reader-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 60px 40px;
+      font-family: Georgia, serif;
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    #reader-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      line-height: 1.3;
+    }
+
+    #reader-close {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: #111;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: var(--font);
+      font-weight: 600;
+    }
+
+    #reader-close:hover { background: #333; }
 
     /* ── OVERLAY ── */
     #overlay {
       position: fixed; inset: 0;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(4px);
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(3px);
       z-index: 999; display: none;
     }
     #overlay.show { display: block; }
 
-    /* ── SIDE MENU ── */
-    #side-menu {
-      position: fixed; top: 0; right: -300px;
-      width: 280px; height: 100vh;
-      background: var(--bg2); border-left: 1px solid var(--border);
-      z-index: 1000; transition: right 0.25s cubic-bezier(0.4,0,0.2,1);
-      display: flex; flex-direction: column;
-      overflow-y: auto; scrollbar-width: none;
+    /* ── BRAVE-STYLE DROPDOWN MENU ── */
+    #dropdown {
+      position: fixed;
+      top: 88px;
+      right: 8px;
+      width: 310px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.4);
+      z-index: 2000;
+      display: none;
+      overflow: hidden;
+      animation: dropIn 0.15s ease;
     }
 
-    #side-menu::-webkit-scrollbar { display: none; }
-    #side-menu.open { right: 0; }
-
-    .menu-header {
-      padding: 20px 20px 12px;
-      display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; background: var(--bg2); z-index: 1;
+    @keyframes dropIn {
+      from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    .menu-header h2 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    #dropdown.show { display: block; }
 
-    .menu-close {
-      width: 28px; height: 28px; background: var(--bg3);
-      border: 1px solid var(--border); border-radius: 8px;
-      color: var(--text2); cursor: pointer; font-size: 14px;
+    .drop-section { padding: 5px; }
+    .drop-divider { height: 1px; background: var(--border); margin: 2px 5px; }
+
+    .drop-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text2);
+      transition: background 0.1s, color 0.1s;
+      user-select: none;
+    }
+
+    .drop-item:hover { background: var(--bg3); color: var(--text); }
+    .drop-item.danger:hover { background: rgba(255,71,87,0.15); color: var(--red); }
+
+    .drop-icon {
+      width: 28px; height: 28px;
+      border-radius: 7px;
       display: flex; align-items: center; justify-content: center;
-      transition: all 0.15s;
+      font-size: 11px; font-weight: 800;
+      flex-shrink: 0;
     }
 
-    .menu-close:hover { background: var(--red); color: white; border-color: var(--red); }
+    .di-red { background: rgba(255,71,87,0.15); color: #ff4757; }
+    .di-green { background: rgba(46,213,115,0.15); color: #2ed573; }
+    .di-blue { background: rgba(83,82,237,0.15); color: #5352ed; }
+    .di-yellow { background: rgba(255,165,2,0.15); color: #ffa502; }
+    .di-purple { background: rgba(162,155,254,0.2); color: #a29bfe; }
+    .di-orange { background: rgba(255,107,53,0.15); color: #ff6b35; }
+    .di-gray { background: var(--bg3); color: var(--text2); }
 
-    .menu-body { padding: 12px; flex: 1; }
-    .menu-section { margin-bottom: 20px; }
+    .drop-label { flex: 1; }
 
-    .menu-section-title {
-      font-size: 10px; font-weight: 600; color: var(--text3);
-      text-transform: uppercase; letter-spacing: 1.5px;
-      padding: 0 8px; margin-bottom: 6px;
+    .drop-shortcut {
+      font-size: 10px;
+      color: var(--text3);
+      font-family: monospace;
+      margin-left: auto;
     }
 
-    .menu-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 12px; border-radius: 10px; cursor: pointer;
-      font-size: 13px; font-weight: 500; color: var(--text2);
-      transition: all 0.15s; margin-bottom: 2px;
+    .drop-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 10px;
+      margin-left: auto;
     }
 
-    .menu-item:hover { background: var(--bg3); color: var(--text); }
+    .badge-on { background: rgba(46,213,115,0.2); color: #2ed573; }
+    .badge-off { background: rgba(255,71,87,0.2); color: #ff4757; }
+    .badge-num { background: rgba(255,71,87,0.2); color: #ff4757; }
+    .badge-gray { background: var(--bg3); color: var(--text3); }
 
-    .menu-item-icon {
-      width: 30px; height: 30px; border-radius: 8px;
+    .drop-arrow { color: var(--text3); font-size: 14px; margin-left: auto; }
+
+    /* Zoom row */
+    .drop-zoom {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+
+    .drop-zoom:hover { background: var(--bg3); }
+
+    .zoom-icon {
+      width: 28px; height: 28px;
+      border-radius: 7px;
+      background: var(--bg3);
       display: flex; align-items: center; justify-content: center;
-      font-size: 13px; flex-shrink: 0; font-weight: 700;
+      font-size: 11px; font-weight: 800; color: var(--text2);
+      flex-shrink: 0;
     }
 
-    .icon-red { background: rgba(255,71,87,0.15); color: #ff4757; }
-    .icon-yellow { background: rgba(255,165,2,0.15); color: #ffa502; }
-    .icon-blue { background: rgba(83,82,237,0.15); color: #5352ed; }
-    .icon-green { background: rgba(46,213,115,0.15); color: #2ed573; }
-    .icon-purple { background: rgba(156,39,176,0.15); color: #9c27b0; }
-    .icon-white { background: rgba(255,255,255,0.08); color: #fff; }
-    .icon-pink { background: rgba(255,100,150,0.15); color: #ff6496; }
-    .icon-orange { background: rgba(255,120,0,0.15); color: #ff7800; }
+    .zoom-label { font-size: 13px; font-weight: 500; color: var(--text2); flex: 1; }
 
-    .menu-badge {
-      margin-left: auto; font-size: 10px; font-weight: 600;
-      padding: 3px 8px; border-radius: 20px; flex-shrink: 0;
+    .zoom-controls { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+
+    .zoom-btn {
+      width: 26px; height: 26px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 15px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.1s;
+      font-family: var(--font);
     }
 
-    .badge-red { background: rgba(255,71,87,0.2); color: var(--red); }
-    .badge-soon { background: var(--bg4); color: var(--text3); }
-    .badge-blue { background: rgba(83,82,237,0.2); color: #7c7bff; }
+    .zoom-btn:hover { background: var(--bg4); }
 
-    .menu-footer {
-      padding: 16px 20px; border-top: 1px solid var(--border); text-align: center;
+    #zoom-value {
+      font-size: 11px;
+      color: var(--text2);
+      min-width: 40px;
+      text-align: center;
+      font-weight: 600;
     }
-    .menu-footer p { font-size: 11px; color: var(--text3); line-height: 1.6; }
-    .menu-footer span { color: var(--red); }
-
-    /* ── TRACKER BADGE ── */
-    #tracker-badge {
-      position: fixed; bottom: 24px; right: 24px;
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 14px; padding: 12px 16px;
-      display: flex; align-items: center; gap: 12px;
-      z-index: 500; cursor: pointer;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6); transition: all 0.2s;
-    }
-
-    #tracker-badge:hover { background: var(--bg3); transform: translateY(-2px); }
-    #tracker-count { font-size: 22px; font-weight: 700; color: var(--red); line-height: 1; }
-    #tracker-label { font-size: 11px; color: var(--text2); margin-top: 2px; }
 
     /* ── TRACKER PANEL ── */
     #tracker-panel {
-      position: fixed; bottom: 90px; right: 24px;
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 14px; padding: 16px;
-      width: 300px; max-height: 280px; overflow-y: auto;
-      display: none; z-index: 499;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6); scrollbar-width: none;
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      width: 290px;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+      z-index: 499;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+      scrollbar-width: none;
     }
 
     #tracker-panel h3 { color: var(--red); margin-bottom: 10px; font-size: 13px; font-weight: 600; }
-    .tracker-item { font-size: 11px; color: var(--text2); padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; }
+    .tracker-item { font-size: 11px; color: var(--text2); padding: 5px 0; border-bottom: 1px solid var(--border); }
+
+    /* Tracker Badge */
+    #tracker-badge {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 498;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      transition: all 0.2s;
+    }
+
+    #tracker-badge:hover { background: var(--bg3); transform: translateY(-2px); }
+    #tracker-count { font-size: 20px; font-weight: 700; color: var(--red); line-height: 1; }
+    #tracker-label { font-size: 11px; color: var(--text2); }
 
     /* ── DOWNLOAD POPUP ── */
     #download-popup {
-      position: fixed; bottom: 24px; left: 50%;
+      position: fixed;
+      bottom: 24px; left: 50%;
       transform: translateX(-50%);
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 16px; padding: 16px; width: 400px;
-      z-index: 1000; box-shadow: 0 12px 48px rgba(0,0,0,0.8);
-      display: none; flex-direction: column; gap: 10px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      width: 390px;
+      z-index: 1000;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.8);
+      display: none;
+      flex-direction: column;
+      gap: 10px;
     }
 
     #download-popup.show { display: flex; }
-    #download-header { display: flex; justify-content: space-between; align-items: center; }
-    #download-header h4 { font-size: 13px; font-weight: 600; }
+    #dl-header { display: flex; justify-content: space-between; align-items: center; }
+    #dl-header h4 { font-size: 13px; font-weight: 600; }
 
-    #download-header button {
-      width: 24px; height: 24px; background: var(--bg3);
-      border: 1px solid var(--border); border-radius: 6px;
-      color: var(--text2); cursor: pointer; font-size: 12px;
+    .icon-btn {
+      width: 24px; height: 24px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text2);
+      cursor: pointer;
+      font-size: 12px;
       display: flex; align-items: center; justify-content: center;
-      transition: all 0.15s;
+      transition: all 0.12s;
     }
 
-    #download-header button:hover { background: var(--red); color: white; border-color: var(--red); }
+    .icon-btn:hover { background: var(--red); color: #fff; border-color: var(--red); }
 
-    .dl-item { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
-    .dl-name { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 8px; display: flex; justify-content: space-between; }
+    .dl-item { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
+    .dl-name { font-size: 12px; font-weight: 500; margin-bottom: 7px; display: flex; justify-content: space-between; }
     .dl-name span:last-child { color: var(--text2); font-size: 11px; }
     .dl-bar-bg { background: var(--bg4); border-radius: 10px; height: 4px; overflow: hidden; }
     .dl-bar { height: 4px; border-radius: 10px; background: var(--blue); width: 0%; transition: width 0.3s; }
     .dl-bar.done { background: var(--green); width: 100% !important; }
     .dl-bar.failed { background: var(--red); }
-    .dl-actions { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
-
-    .dl-actions button {
-      background: var(--bg4); border: 1px solid var(--border);
-      color: var(--text2); font-size: 11px; font-weight: 500;
-      padding: 4px 10px; border-radius: 6px; cursor: pointer;
-      font-family: var(--font); transition: all 0.15s;
-    }
-
-    .dl-actions button:hover { background: var(--bg2); color: var(--text); }
+    .dl-actions { display: flex; align-items: center; gap: 6px; margin-top: 7px; }
+    .dl-open { background: var(--bg4); border: 1px solid var(--border); color: var(--text2); font-size: 11px; padding: 3px 9px; border-radius: 5px; cursor: pointer; font-family: var(--font); }
+    .dl-open:hover { background: var(--bg2); color: var(--text); }
     .dl-size { color: var(--text3); font-size: 11px; margin-left: auto; }
 
-    /* ── SPEED TEST ── */
-    #speed-widget {
-      position: fixed; top: 50%; left: 50%;
+    /* ── PANELS (Speed, Network, Antivirus, Custom, OwnUI, Feedback) ── */
+    .panel {
+      position: fixed;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 20px; padding: 32px; width: 340px;
-      z-index: 1001; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-      display: none; flex-direction: column; align-items: center; gap: 20px;
-    }
-
-    #speed-widget.show { display: flex; }
-    #speed-widget h3 { font-size: 15px; font-weight: 600; }
-
-    .speed-ring {
-      width: 140px; height: 140px; border-radius: 50%;
-      border: 3px solid var(--border);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center; background: var(--bg3);
-    }
-
-    .speed-value { font-size: 32px; font-weight: 700; line-height: 1; }
-    .speed-unit { font-size: 12px; color: var(--text2); margin-top: 4px; }
-    .speed-label { font-size: 11px; color: var(--text3); margin-top: 2px; }
-    .speed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
-    .speed-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; }
-    .speed-card-val { font-size: 20px; font-weight: 700; }
-    .speed-card-label { font-size: 11px; color: var(--text2); margin-top: 4px; }
-    .speed-card.down .speed-card-val { color: var(--blue); }
-    .speed-card.up .speed-card-val { color: var(--green); }
-
-    .speed-btn {
-      background: var(--text); color: var(--bg); border: none;
-      border-radius: 10px; padding: 10px 28px;
-      font-size: 13px; font-weight: 600; cursor: pointer;
-      font-family: var(--font); transition: opacity 0.15s; width: 100%;
-    }
-
-    .speed-btn:hover { opacity: 0.85; }
-    .speed-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    .speed-close {
-      position: absolute; top: 16px; right: 16px;
-      width: 28px; height: 28px; background: var(--bg3);
-      border: 1px solid var(--border); border-radius: 8px;
-      color: var(--text2); cursor: pointer; font-size: 12px;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.15s;
-    }
-
-    .speed-close:hover { background: var(--red); color: white; }
-
-    /* ── NETWORK PANEL ── */
-    #network-panel {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 20px; padding: 24px; width: 360px;
-      z-index: 1001; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-      display: none; flex-direction: column; gap: 16px;
-    }
-
-    #network-panel.show { display: flex; }
-
-    .network-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-    .network-card-header { display: flex; align-items: center; justify-content: space-between; }
-    .network-card-title { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
-    .network-card-icon { width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
-    .network-card-desc { font-size: 11px; color: var(--text2); line-height: 1.5; }
-
-    .toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
-    .toggle input { opacity: 0; width: 0; height: 0; }
-
-    .toggle-slider {
-      position: absolute; inset: 0; background: var(--bg4);
-      border-radius: 24px; cursor: pointer;
-      transition: background 0.2s; border: 1px solid var(--border);
-    }
-
-    .toggle-slider:before {
-      content: ''; position: absolute;
-      width: 18px; height: 18px; left: 3px; top: 2px;
-      background: var(--text2); border-radius: 50%; transition: all 0.2s;
-    }
-
-    .toggle input:checked + .toggle-slider { background: #2ed573; border-color: #2ed573; }
-    .toggle input:checked + .toggle-slider:before { transform: translateX(20px); background: white; }
-
-    .network-stats { display: flex; gap: 8px; }
-    .stat-box { flex: 1; background: var(--bg4); border-radius: 10px; padding: 10px; text-align: center; }
-    .stat-val { font-size: 16px; font-weight: 700; color: var(--text); }
-    .stat-label { font-size: 10px; color: var(--text2); margin-top: 2px; }
-    .stat-val.good { color: #2ed573; }
-    .stat-val.ok { color: #ffa502; }
-    .stat-val.bad { color: #ff4757; }
-
-    .ping-btn {
-      background: var(--bg4); border: 1px solid var(--border);
-      border-radius: 8px; color: var(--text2); font-size: 12px;
-      font-weight: 500; padding: 6px 12px; cursor: pointer;
-      font-family: var(--font); transition: all 0.15s; width: 100%;
-    }
-
-    .ping-btn:hover { background: var(--bg3); color: var(--text); }
-    .network-panel-header { display: flex; justify-content: space-between; align-items: center; }
-    .network-panel-header h3 { font-size: 15px; font-weight: 600; }
-
-    /* ── ANTIVIRUS PANEL ── */
-    #antivirus-panel {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 20px; padding: 24px; width: 360px;
-      z-index: 1001; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-      display: none; flex-direction: column; gap: 16px;
-    }
-
-    #antivirus-panel.show { display: flex; }
-    .av-header { display: flex; justify-content: space-between; align-items: center; }
-    .av-header h3 { font-size: 15px; font-weight: 600; }
-
-    .av-status {
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 14px; padding: 16px;
-      display: flex; align-items: center; gap: 14px;
-    }
-
-    .av-icon {
-      width: 48px; height: 48px; border-radius: 14px;
-      background: rgba(46,213,115,0.15);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 22px; font-weight: 800; color: #2ed573;
-      flex-shrink: 0;
-    }
-
-    .av-icon.danger { background: rgba(255,71,87,0.15); color: #ff4757; }
-
-    .av-title { font-size: 14px; font-weight: 600; }
-    .av-sub { font-size: 11px; color: var(--text2); margin-top: 3px; }
-
-    /* ── CUSTOMIZATION PANEL ── */
-    #custom-panel {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 20px; padding: 24px; width: 420px;
-      max-height: 80vh; overflow-y: auto;
-      z-index: 1001; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-      display: none; flex-direction: column; gap: 20px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      z-index: 1001;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 85vh;
+      overflow-y: auto;
       scrollbar-width: none;
     }
 
-    #custom-panel.show { display: flex; }
-    #custom-panel::-webkit-scrollbar { display: none; }
+    .panel::-webkit-scrollbar { display: none; }
+    .panel.show { display: flex; }
 
-    .custom-header { display: flex; justify-content: space-between; align-items: center; }
-    .custom-header h3 { font-size: 15px; font-weight: 600; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+    .panel-header h3 { font-size: 15px; font-weight: 600; }
 
-    .custom-section { display: flex; flex-direction: column; gap: 10px; }
-    .custom-section h4 { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
+    .close-btn {
+      width: 26px; height: 26px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text2);
+      cursor: pointer;
+      font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.12s;
+    }
 
-    .theme-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .close-btn:hover { background: var(--red); color: #fff; border-color: var(--red); }
 
-    .theme-btn {
-      border-radius: 10px; padding: 10px 6px;
-      cursor: pointer; font-size: 10px; font-weight: 600;
-      border: 2px solid transparent; transition: all 0.2s;
-      text-align: center; display: flex; flex-direction: column;
-      align-items: center; gap: 6px; color: var(--text2);
+    /* Card inside panel */
+    .p-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .p-card-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .p-card-title { display: flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 600; }
+
+    .p-icon {
+      width: 32px; height: 32px;
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .p-desc { font-size: 11px; color: var(--text2); line-height: 1.5; }
+
+    .stats-row { display: flex; gap: 8px; }
+
+    .stat-box {
+      flex: 1;
+      background: var(--bg4);
+      border-radius: 8px;
+      padding: 9px;
+      text-align: center;
+    }
+
+    .stat-val { font-size: 15px; font-weight: 700; }
+    .stat-label { font-size: 10px; color: var(--text2); margin-top: 2px; }
+    .stat-val.good { color: var(--green); }
+    .stat-val.ok { color: var(--yellow); }
+    .stat-val.bad { color: var(--red); }
+
+    /* Toggle switch */
+    .toggle { position: relative; width: 42px; height: 22px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+
+    .toggle-slider {
+      position: absolute; inset: 0;
+      background: var(--bg4);
+      border-radius: 22px;
+      cursor: pointer;
+      transition: background 0.2s;
+      border: 1px solid var(--border);
+    }
+
+    .toggle-slider:before {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
+      left: 2px; top: 2px;
+      background: var(--text2);
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+
+    .toggle input:checked + .toggle-slider { background: var(--green); border-color: var(--green); }
+    .toggle input:checked + .toggle-slider:before { transform: translateX(20px); background: #fff; }
+
+    /* Ping btn */
+    .action-btn {
+      background: var(--bg4);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text2);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all 0.12s;
+      width: 100%;
+    }
+
+    .action-btn:hover { background: var(--bg3); color: var(--text); }
+
+    /* ── SPEED TEST ── */
+    #speed-widget { width: 320px; align-items: center; }
+
+    .speed-ring {
+      width: 130px; height: 130px;
+      border-radius: 50%;
+      border: 3px solid var(--border);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       background: var(--bg3);
     }
 
-    .theme-btn:hover { border-color: var(--text2); transform: scale(1.05); color: var(--text); }
-    .theme-btn.active { border-color: var(--text) !important; color: var(--text); }
+    .speed-value { font-size: 30px; font-weight: 700; line-height: 1; }
+    .speed-unit { font-size: 11px; color: var(--text2); margin-top: 3px; }
+    .speed-lbl { font-size: 10px; color: var(--text3); margin-top: 2px; }
+    .speed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+    .speed-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; }
+    .speed-card-val { font-size: 18px; font-weight: 700; }
+    .speed-card-lbl { font-size: 10px; color: var(--text2); margin-top: 3px; }
+    .speed-card.down .speed-card-val { color: var(--blue); }
+    .speed-card.up .speed-card-val { color: var(--green); }
 
-    .theme-preview {
-      width: 32px; height: 32px; border-radius: 8px;
+    .primary-btn {
+      background: var(--text);
+      color: var(--bg);
+      border: none;
+      border-radius: 9px;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: opacity 0.15s;
+      width: 100%;
+    }
+
+    .primary-btn:hover { opacity: 0.85; }
+    .primary-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── CUSTOMIZE PANEL ── */
+    #custom-panel { width: 400px; }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+
+    .theme-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+
+    .theme-btn {
+      border-radius: 9px;
+      padding: 9px 5px;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 600;
+      border: 2px solid transparent;
+      transition: all 0.15s;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      color: var(--text2);
+      background: var(--bg3);
+    }
+
+    .theme-btn:hover { border-color: var(--text2); color: var(--text); transform: scale(1.04); }
+    .theme-btn.active { border-color: var(--text); color: var(--text); }
+
+    .theme-dot {
+      width: 28px; height: 28px;
+      border-radius: 7px;
       border: 1px solid rgba(255,255,255,0.1);
     }
 
-    .font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
 
     .font-btn {
-      background: var(--bg3); border: 2px solid transparent;
-      border-radius: 10px; padding: 10px; cursor: pointer;
-      color: var(--text2); font-size: 13px; transition: all 0.2s;
+      background: var(--bg3);
+      border: 2px solid transparent;
+      border-radius: 9px;
+      padding: 9px;
+      cursor: pointer;
+      color: var(--text2);
+      font-size: 13px;
+      transition: all 0.15s;
       text-align: center;
     }
 
     .font-btn:hover { background: var(--bg4); color: var(--text); }
     .font-btn.active { border-color: var(--text); color: var(--text); }
 
-    .color-grid { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .color-row { display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
 
     .color-dot {
-      width: 28px; height: 28px; border-radius: 50%;
-      cursor: pointer; border: 3px solid transparent;
-      transition: all 0.2s; flex-shrink: 0;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: all 0.15s;
     }
 
     .color-dot:hover { transform: scale(1.2); }
-    .color-dot.active { border-color: white; }
+    .color-dot.active { border-color: #fff; }
 
-    .radius-grid { display: flex; gap: 8px; }
+    .radius-row { display: flex; gap: 7px; }
 
     .radius-btn {
-      flex: 1; background: var(--bg3); border: 2px solid transparent;
-      border-radius: 8px; padding: 8px; cursor: pointer;
-      color: var(--text2); font-size: 12px; transition: all 0.2s;
-      text-align: center; font-family: var(--font);
+      flex: 1;
+      background: var(--bg3);
+      border: 2px solid transparent;
+      border-radius: 7px;
+      padding: 7px;
+      cursor: pointer;
+      color: var(--text2);
+      font-size: 11px;
+      transition: all 0.15s;
+      text-align: center;
+      font-family: var(--font);
     }
 
     .radius-btn:hover { background: var(--bg4); color: var(--text); }
     .radius-btn.active { border-color: var(--text); color: var(--text); }
 
-    /* Own UI Button */
     .own-ui-btn {
-      background: linear-gradient(135deg, #5352ed, #9c27b0);
-      border: none; border-radius: 12px; padding: 14px;
-      color: white; font-size: 14px; font-weight: 600;
-      cursor: pointer; font-family: var(--font);
-      transition: all 0.2s; width: 100%; text-align: center;
+      background: linear-gradient(135deg, var(--blue), #9c27b0);
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: opacity 0.15s;
+      width: 100%;
     }
 
-    .own-ui-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .own-ui-btn:hover { opacity: 0.85; }
 
     /* ── OWN UI PANEL ── */
-    #own-ui-panel {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 20px; padding: 24px; width: 500px;
-      max-height: 80vh; overflow-y: auto;
-      z-index: 1002; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-      display: none; flex-direction: column; gap: 16px;
-      scrollbar-width: none;
-    }
-
-    #own-ui-panel.show { display: flex; }
-    #own-ui-panel::-webkit-scrollbar { display: none; }
-
-    .own-ui-header { display: flex; justify-content: space-between; align-items: center; }
-    .own-ui-header h3 { font-size: 15px; font-weight: 600; }
+    #own-ui-panel { width: 480px; }
 
     .css-editor {
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 10px; padding: 12px;
-      color: var(--text); font-size: 12px;
-      font-family: 'JetBrains Mono', monospace;
-      width: 100%; height: 200px; resize: vertical;
-      outline: none; line-height: 1.6;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 12px;
+      color: var(--text);
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+      width: 100%;
+      height: 180px;
+      resize: vertical;
+      outline: none;
+      line-height: 1.6;
     }
 
-    .apply-css-btn {
-      background: var(--text); color: var(--bg); border: none;
-      border-radius: 10px; padding: 10px;
-      font-size: 13px; font-weight: 600; cursor: pointer;
-      font-family: var(--font); transition: opacity 0.15s; width: 100%;
-    }
+    .presets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
 
-    .apply-css-btn:hover { opacity: 0.85; }
-
-    .css-presets { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-
-    .css-preset {
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 10px; padding: 10px; cursor: pointer;
-      color: var(--text2); font-size: 12px; font-weight: 500;
-      text-align: center; transition: all 0.15s; font-family: var(--font);
-    }
-
-    .css-preset:hover { background: var(--bg4); color: var(--text); }
-
-    /* ── FEEDBACK PANEL ── */
-    #feedback-panel {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 20px; padding: 24px; width: 400px;
-      z-index: 1001; box-shadow: 0 20px 60px rgba(0,0,0,0.9);
-      display: none; flex-direction: column; gap: 16px;
-    }
-
-    #feedback-panel.show { display: flex; }
-
-    .feedback-header { display: flex; justify-content: space-between; align-items: center; }
-    .feedback-header h3 { font-size: 15px; font-weight: 600; }
-
-    .feedback-types { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-
-    .feedback-type {
-      background: var(--bg3); border: 2px solid transparent;
-      border-radius: 10px; padding: 10px 6px; cursor: pointer;
-      color: var(--text2); font-size: 11px; font-weight: 600;
-      text-align: center; transition: all 0.15s;
-    }
-
-    .feedback-type:hover { background: var(--bg4); color: var(--text); }
-    .feedback-type.active { border-color: var(--blue); color: var(--text); }
-
-    .feedback-input {
-      background: var(--bg3); border: 1px solid var(--border);
-      border-radius: 10px; padding: 12px; color: var(--text);
-      font-size: 13px; font-family: var(--font);
-      width: 100%; height: 100px; resize: none; outline: none;
-      line-height: 1.5;
-    }
-
-    .feedback-input::placeholder { color: var(--text3); }
-
-    .feedback-input:focus { border-color: var(--accent2); }
-
-    .send-feedback-btn {
-      background: var(--blue); color: white; border: none;
-      border-radius: 10px; padding: 12px;
-      font-size: 13px; font-weight: 600; cursor: pointer;
-      font-family: var(--font); transition: opacity 0.15s; width: 100%;
-    }
-
-    .send-feedback-btn:hover { opacity: 0.85; }
-
-    .feedback-rating { display: flex; gap: 8px; justify-content: center; }
-
-    .rating-star {
-      font-size: 24px; cursor: pointer; transition: transform 0.1s;
-      color: var(--text3); background: none; border: none;
+    .preset-btn {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px;
+      cursor: pointer;
+      color: var(--text2);
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+      transition: all 0.12s;
       font-family: var(--font);
     }
 
-    .rating-star:hover, .rating-star.active { color: #ffa502; transform: scale(1.2); }
+    .preset-btn:hover { background: var(--bg4); color: var(--text); }
+
+    /* ── FEEDBACK PANEL ── */
+    #feedback-panel { width: 380px; }
+
+    .feedback-types { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+
+    .fb-type {
+      background: var(--bg3);
+      border: 2px solid transparent;
+      border-radius: 8px;
+      padding: 8px 5px;
+      cursor: pointer;
+      color: var(--text2);
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.12s;
+    }
+
+    .fb-type:hover { background: var(--bg4); color: var(--text); }
+    .fb-type.active { border-color: var(--blue); color: var(--text); }
+
+    .stars { display: flex; gap: 6px; justify-content: center; }
+
+    .star-btn {
+      font-size: 22px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--text3);
+      transition: all 0.1s;
+      font-family: var(--font);
+    }
+
+    .star-btn:hover, .star-btn.active { color: var(--yellow); transform: scale(1.15); }
+
+    .fb-input {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px 12px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: var(--font);
+      width: 100%;
+      height: 90px;
+      resize: none;
+      outline: none;
+      line-height: 1.5;
+    }
+
+    .fb-input::placeholder { color: var(--text3); }
+    .fb-input:focus { border-color: #555; }
+
+    .send-btn {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      padding: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: opacity 0.15s;
+      width: 100%;
+    }
+
+    .send-btn:hover { opacity: 0.85; }
 
     /* ── UPDATE PANEL ── */
     #update-panel {
-      position: fixed; bottom: 24px; right: 24px;
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 16px; padding: 16px; width: 300px;
-      z-index: 1000; box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-      display: none; flex-direction: column; gap: 10px;
+      position: fixed;
+      bottom: 80px; right: 20px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      width: 280px;
+      z-index: 1000;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+      display: none;
+      flex-direction: column;
+      gap: 9px;
     }
 
     #update-panel.show { display: flex; }
-    .update-title { font-size: 13px; font-weight: 600; }
-    .update-sub { font-size: 11px; color: var(--text2); }
+    .upd-title { font-size: 13px; font-weight: 600; }
+    .upd-sub { font-size: 11px; color: var(--text2); }
+    .upd-bar-bg { background: var(--bg4); border-radius: 8px; height: 4px; overflow: hidden; }
+    .upd-bar { height: 4px; border-radius: 8px; background: var(--blue); width: 0%; transition: width 0.3s; }
+    .upd-btn { background: var(--text); color: var(--bg); border: none; border-radius: 7px; padding: 7px 14px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: var(--font); }
+    .upd-btn:hover { opacity: 0.85; }
 
-    .update-bar-bg { background: var(--bg4); border-radius: 10px; height: 4px; overflow: hidden; }
-    .update-bar { height: 4px; border-radius: 10px; background: var(--blue); width: 0%; transition: width 0.3s; }
-
-    .update-btn {
-      background: var(--text); color: var(--bg); border: none;
-      border-radius: 8px; padding: 8px 16px;
-      font-size: 12px; font-weight: 600; cursor: pointer;
-      font-family: var(--font); transition: opacity 0.15s;
-    }
-
-    .update-btn:hover { opacity: 0.85; }
-
-    /* ── ALERT ── */
+    /* ── SECURITY ALERT ── */
     #security-alert {
-      position: fixed; top: 60px; left: 50%;
+      position: fixed;
+      top: 100px; left: 50%;
       transform: translateX(-50%);
-      background: #ff4757; color: white;
-      border-radius: 12px; padding: 12px 20px;
-      font-size: 13px; font-weight: 600;
-      display: none; z-index: 9999;
+      background: var(--red);
+      color: #fff;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      display: none;
+      z-index: 9999;
       box-shadow: 0 4px 20px rgba(255,71,87,0.4);
-      max-width: 500px; text-align: center;
+      max-width: 500px;
+      text-align: center;
     }
 
-    /* ── COOKIE TOAST ── */
-    #cookie-toast {
-      position: fixed; bottom: 24px; left: 50%;
-      transform: translateX(-50%);
-      background: var(--green); color: #000;
-      padding: 10px 20px; border-radius: 20px;
-      font-size: 12px; font-weight: 600;
-      display: none; z-index: 9999;
+    /* ── FPS COUNTER ── */
+    #fps-counter {
+      position: fixed;
+      top: 120px; left: 10px;
+      background: rgba(0,0,0,0.85);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+      z-index: 500;
+      display: none;
+      font-family: monospace;
     }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 24px; left: 50%;
+      transform: translateX(-50%);
+      background: var(--green);
+      color: #000;
+      padding: 9px 18px;
+      border-radius: 18px;
+      font-size: 12px;
+      font-weight: 600;
+      display: none;
+      z-index: 9999;
+      white-space: nowrap;
+    }
+
+    /* Custom CSS injection */
+    #custom-style { }
+
+    /* ── HISTORY PANEL ── */
+    #history-panel { width: 360px; }
+    .history-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 10px; border-radius: 8px; cursor: pointer;
+      transition: background 0.1s;
+    }
+    .history-item:hover { background: var(--bg3); }
+    .history-url { font-size: 12px; color: var(--text2); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .history-title { font-size: 13px; font-weight: 500; }
+    .history-time { font-size: 10px; color: var(--text3); flex-shrink: 0; }
+
+    /* ── BOOKMARKS PANEL ── */
+    #bm-panel { width: 360px; }
   </style>
 </head>
 <body>
@@ -747,20 +1144,20 @@
   <!-- Title Bar -->
   <div id="titlebar">
     <div class="brand">
-      <span class="brand-fy">F.Y</span>
-      <span>Browser</span>
-      <span class="brand-sub">— For Family</span>
+      <span class="brand-badge">F.Y</span>
+      <span style="font-weight:600">Browser</span>
+      <span class="brand-sub">v2.0 — For Family</span>
     </div>
     <div class="win-btns">
-      <button class="win-btn" id="min-btn">─</button>
-      <button class="win-btn" id="max-btn">□</button>
-      <button class="win-btn" id="close-btn">✕</button>
+      <button class="win-btn" id="min-btn">&#8722;</button>
+      <button class="win-btn" id="max-btn">&#9633;</button>
+      <button class="win-btn" id="close-btn">&#10005;</button>
     </div>
   </div>
 
   <!-- Tabs -->
   <div id="tabs">
-    <div id="new-tab">+</div>
+    <div id="new-tab-btn" title="New Tab">+</div>
   </div>
 
   <!-- Navbar -->
@@ -768,132 +1165,206 @@
     <button class="nav-btn" id="back-btn" title="Back">&#8592;</button>
     <button class="nav-btn" id="fwd-btn" title="Forward">&#8594;</button>
     <button class="nav-btn" id="reload-btn" title="Reload">&#8635;</button>
+
+    <div class="nav-sep"></div>
+
+    <button class="nav-btn" id="bookmark-btn" title="Bookmark this page">&#9733;</button>
+
     <div id="url-wrap">
-      <span id="url-icon">HTTP</span>
+      <span id="url-prefix">HTTP</span>
       <input id="url-bar" type="text" placeholder="Search or type a URL..." />
+      <span id="shield-count">0</span>
     </div>
-    <button class="nav-btn" id="tracker-nav-btn" title="Tracker Info">&#128737;</button>
-    <button class="nav-btn" id="booster-nav-btn" title="Network Booster">NET</button>
-    <button class="nav-btn" id="menu-btn" title="Menu">&#9776;</button>
+
+    <button class="nav-btn" id="screenshot-btn" title="Take Screenshot">&#9638;</button>
+    <button class="nav-btn" id="pip-btn" title="Picture in Picture">&#9654;</button>
+    <button class="nav-btn" id="dark-mode-btn" title="Force Dark Mode">&#9790;</button>
+
+    <div class="nav-sep"></div>
+
+    <button class="nav-btn" id="menu-btn" title="Menu" style="font-size:12px;font-weight:800;letter-spacing:1px">&#9776;</button>
+  </div>
+
+  <!-- Bookmarks Bar -->
+  <div id="bookmarks-bar">
+    <span id="bookmarks-empty" style="display:none">No bookmarks yet — star a page to add one!</span>
+  </div>
+
+  <!-- Find Bar -->
+  <div id="find-bar" class="hidden">
+    <input id="find-input" type="text" placeholder="Find in page..." />
+    <span id="find-count"></span>
+    <button class="find-btn" id="find-prev">&#8593;</button>
+    <button class="find-btn" id="find-next">&#8595;</button>
+    <button class="find-btn" id="find-close">&#10005;</button>
   </div>
 
   <!-- Browser View -->
   <div id="browser-view">
-    <webview id="webview" src="https://www.google.com" allowpopups></webview>
+    <webview id="webview" src="https://www.google.com" allowpopups partition="persist:fywebview"></webview>
+
+    <!-- Reader Mode Overlay -->
+    <div id="reader-overlay">
+      <button id="reader-close">Exit Reader Mode</button>
+      <div id="reader-content">
+        <div id="reader-title"></div>
+        <div id="reader-body"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Overlay -->
   <div id="overlay"></div>
 
-  <!-- Side Menu -->
-  <div id="side-menu">
-    <div class="menu-header">
-      <h2><span class="brand-fy" style="font-size:11px;padding:1px 6px;">F.Y</span> Browser</h2>
-      <button class="menu-close" id="menu-close-btn">✕</button>
-    </div>
-    <div class="menu-body">
+  <!-- ══ BRAVE-STYLE DROPDOWN MENU ══ -->
+  <div id="dropdown">
 
-      <div class="menu-section">
-        <div class="menu-section-title">Privacy</div>
-        <div class="menu-item" id="menu-tracker-btn">
-          <div class="menu-item-icon icon-red">BLK</div>
-          Tracker Blocker
-          <span class="menu-badge badge-red" id="menu-tracker-count">0</span>
-        </div>
-        <div class="menu-item" id="menu-adblock-btn">
-          <div class="menu-item-icon icon-red">AD</div>
-          Ad Blocker
-          <span class="menu-badge" id="adblock-badge">ON</span>
-        </div>
-        <div class="menu-item" id="menu-cookie-btn">
-          <div class="menu-item-icon icon-yellow">CKI</div>
-          Clear Cookies
-        </div>
+    <div class="drop-section">
+      <div class="drop-item" id="drop-new-tab">
+        <div class="drop-icon di-gray">+</div>
+        <span class="drop-label">New Tab</span>
+        <span class="drop-shortcut">Ctrl+T</span>
       </div>
-
-      <div class="menu-section">
-        <div class="menu-section-title">Security</div>
-        <div class="menu-item" id="menu-antivirus-btn">
-          <div class="menu-item-icon icon-green">AV</div>
-          Antivirus
-          <span class="menu-badge" id="av-badge" style="background:rgba(46,213,115,0.2);color:#2ed573">ON</span>
-        </div>
+      <div class="drop-item" id="drop-private-tab">
+        <div class="drop-icon di-purple">P</div>
+        <span class="drop-label">New Private Tab</span>
+        <span class="drop-shortcut">Ctrl+Shift+N</span>
       </div>
-
-      <div class="menu-section">
-        <div class="menu-section-title">Downloads</div>
-        <div class="menu-item" id="menu-dl-btn">
-          <div class="menu-item-icon icon-blue">DL</div>
-          Download Manager
-          <span class="menu-badge badge-blue" id="menu-dl-count" style="display:none">0</span>
-        </div>
-      </div>
-
-      <div class="menu-section">
-        <div class="menu-section-title">Performance</div>
-        <div class="menu-item" id="menu-fps-btn">
-          <div class="menu-item-icon icon-green">FPS</div>
-          FPS Counter
-          <span class="menu-badge badge-soon" id="fps-badge">OFF</span>
-        </div>
-        <div class="menu-item" id="menu-latency-btn">
-          <div class="menu-item-icon icon-green">LAT</div>
-          Low Latency Mode
-          <span class="menu-badge badge-soon" id="latency-badge">OFF</span>
-        </div>
-      </div>
-
-      <div class="menu-section">
-        <div class="menu-section-title">Network</div>
-        <div class="menu-item" id="menu-speed-btn">
-          <div class="menu-item-icon icon-blue">SPD</div>
-          Speed Test
-        </div>
-        <div class="menu-item" id="menu-network-btn">
-          <div class="menu-item-icon icon-purple">VPN</div>
-          VPN + Booster
-        </div>
-      </div>
-
-      <div class="menu-section">
-        <div class="menu-section-title">Customize</div>
-        <div class="menu-item" id="menu-custom-btn">
-          <div class="menu-item-icon icon-pink">UI</div>
-          Themes and Fonts
-        </div>
-      </div>
-
-      <div class="menu-section">
-        <div class="menu-section-title">Updates</div>
-        <div class="menu-item" id="menu-update-btn">
-          <div class="menu-item-icon icon-blue">UPD</div>
-          Check for Updates
-          <span class="menu-badge badge-soon" id="update-badge">v1.0.0</span>
-        </div>
-      </div>
-
-      <div class="menu-section">
-        <div class="menu-section-title">Feedback</div>
-        <div class="menu-item" id="menu-feedback-btn">
-          <div class="menu-item-icon icon-orange">FB</div>
-          Send Feedback
-        </div>
-      </div>
-
     </div>
 
-    <div class="menu-footer">
-      <p><strong>F.Y Browser</strong><br/>Free forever · For Family<br/>Made with <span>love</span> by Imrane</p>
+    <div class="drop-divider"></div>
+
+    <div class="drop-section">
+      <div class="drop-item" id="drop-adblock">
+        <div class="drop-icon di-red">AD</div>
+        <span class="drop-label">Ad Blocker</span>
+        <span class="drop-badge badge-on" id="drop-ad-badge">ON</span>
+      </div>
+      <div class="drop-item" id="drop-trackers">
+        <div class="drop-icon di-red">BLK</div>
+        <span class="drop-label">Tracker Blocker</span>
+        <span class="drop-badge badge-num" id="drop-tracker-badge">0</span>
+      </div>
+      <div class="drop-item" id="drop-antivirus">
+        <div class="drop-icon di-green">AV</div>
+        <span class="drop-label">Antivirus</span>
+        <span class="drop-badge badge-on">ON</span>
+      </div>
+      <div class="drop-item" id="drop-vpn">
+        <div class="drop-icon di-blue">VPN</div>
+        <span class="drop-label">VPN + Booster</span>
+        <span class="drop-badge badge-off" id="drop-vpn-badge">OFF</span>
+      </div>
     </div>
+
+    <div class="drop-divider"></div>
+
+    <div class="drop-section">
+      <div class="drop-item" id="drop-history">
+        <div class="drop-icon di-gray">&#9202;</div>
+        <span class="drop-label">History</span>
+        <span class="drop-arrow">&#8250;</span>
+      </div>
+      <div class="drop-item" id="drop-bookmarks">
+        <div class="drop-icon di-yellow">&#9733;</div>
+        <span class="drop-label">Bookmarks</span>
+        <span class="drop-arrow">&#8250;</span>
+      </div>
+      <div class="drop-item" id="drop-downloads">
+        <div class="drop-icon di-blue">DL</div>
+        <span class="drop-label">Downloads</span>
+        <span class="drop-shortcut">Ctrl+J</span>
+      </div>
+    </div>
+
+    <div class="drop-divider"></div>
+
+    <div class="drop-section">
+      <div class="drop-item" id="drop-screenshot">
+        <div class="drop-icon di-gray">&#9638;</div>
+        <span class="drop-label">Screenshot</span>
+      </div>
+      <div class="drop-item" id="drop-find">
+        <div class="drop-icon di-gray">&#128269;</div>
+        <span class="drop-label">Find in Page</span>
+        <span class="drop-shortcut">Ctrl+F</span>
+      </div>
+      <div class="drop-item" id="drop-reader">
+        <div class="drop-icon di-gray">&#9776;</div>
+        <span class="drop-label">Reader Mode</span>
+      </div>
+      <div class="drop-item" id="drop-darkmode">
+        <div class="drop-icon di-gray">&#9790;</div>
+        <span class="drop-label">Force Dark Mode</span>
+        <span class="drop-badge badge-off" id="drop-dark-badge">OFF</span>
+      </div>
+      <div class="drop-item" id="drop-speed">
+        <div class="drop-icon di-blue">SPD</div>
+        <span class="drop-label">Speed Test</span>
+      </div>
+    </div>
+
+    <div class="drop-divider"></div>
+
+    <!-- Zoom Row -->
+    <div class="drop-section">
+      <div class="drop-zoom" id="drop-zoom">
+        <div class="zoom-icon">&#128269;</div>
+        <span class="zoom-label">Zoom</span>
+        <div class="zoom-controls">
+          <button class="zoom-btn" id="zoom-out">&#8722;</button>
+          <span id="zoom-value">100%</span>
+          <button class="zoom-btn" id="zoom-in">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="drop-divider"></div>
+
+    <div class="drop-section">
+      <div class="drop-item" id="drop-customize">
+        <div class="drop-icon di-purple">UI</div>
+        <span class="drop-label">Themes &amp; Fonts</span>
+      </div>
+      <div class="drop-item" id="drop-own-ui">
+        <div class="drop-icon di-purple">CSS</div>
+        <span class="drop-label">Build Your Own UI</span>
+      </div>
+      <div class="drop-item" id="drop-fps">
+        <div class="drop-icon di-green">FPS</div>
+        <span class="drop-label">FPS Counter</span>
+        <span class="drop-badge badge-off" id="drop-fps-badge">OFF</span>
+      </div>
+    </div>
+
+    <div class="drop-divider"></div>
+
+    <div class="drop-section">
+      <div class="drop-item" id="drop-update">
+        <div class="drop-icon di-blue">UPD</div>
+        <span class="drop-label">Check for Updates</span>
+        <span class="drop-badge badge-gray" id="drop-ver-badge">v2.0.0</span>
+      </div>
+      <div class="drop-item" id="drop-feedback">
+        <div class="drop-icon di-orange">FB</div>
+        <span class="drop-label">Send Feedback</span>
+      </div>
+      <div class="drop-item danger" id="drop-clear-cookies">
+        <div class="drop-icon di-red">CLR</div>
+        <span class="drop-label">Clear Cookies</span>
+        <span class="drop-shortcut">Ctrl+Shift+Del</span>
+      </div>
+    </div>
+
   </div>
 
   <!-- Tracker Badge -->
   <div id="tracker-badge">
     <div>
       <div id="tracker-count">0</div>
-      <div id="tracker-label">Trackers Blocked</div>
+      <div id="tracker-label">Blocked</div>
     </div>
-    <span style="font-weight:700;color:var(--red)">BLK</span>
+    <span style="font-weight:800;color:var(--red);font-size:11px">SHIELD</span>
   </div>
 
   <!-- Tracker Panel -->
@@ -904,45 +1375,47 @@
 
   <!-- Download Popup -->
   <div id="download-popup">
-    <div id="download-header">
+    <div id="dl-header">
       <h4>Downloads</h4>
-      <button id="dl-close-btn">✕</button>
+      <button class="icon-btn" id="dl-close-btn">&#10005;</button>
     </div>
     <div id="download-list"></div>
   </div>
 
-  <!-- Speed Test -->
-  <div id="speed-widget" style="position:fixed;">
-    <button class="speed-close" id="speed-close-btn">✕</button>
-    <h3>Network Speed Test</h3>
+  <!-- Speed Test Panel -->
+  <div class="panel" id="speed-widget">
+    <div class="panel-header">
+      <h3>Network Speed Test</h3>
+      <button class="close-btn" id="speed-close">&#10005;</button>
+    </div>
     <div class="speed-ring">
       <div class="speed-value" id="speed-val">--</div>
       <div class="speed-unit">Mbps</div>
-      <div class="speed-label" id="speed-label">Ready</div>
+      <div class="speed-lbl" id="speed-lbl">Ready</div>
     </div>
     <div class="speed-grid">
       <div class="speed-card down">
         <div class="speed-card-val" id="dl-speed">--</div>
-        <div class="speed-card-label">Download</div>
+        <div class="speed-card-lbl">Download</div>
       </div>
       <div class="speed-card up">
         <div class="speed-card-val" id="ul-speed">--</div>
-        <div class="speed-card-label">Upload</div>
+        <div class="speed-card-lbl">Upload</div>
       </div>
     </div>
-    <button class="speed-btn" id="speed-start-btn">Start Test</button>
+    <button class="primary-btn" id="speed-start">Start Test</button>
   </div>
 
   <!-- Network Panel -->
-  <div id="network-panel">
-    <div class="network-panel-header">
+  <div class="panel" id="network-panel" style="width:350px">
+    <div class="panel-header">
       <h3>Network</h3>
-      <button class="menu-close" id="network-close-btn">✕</button>
+      <button class="close-btn" id="net-close">&#10005;</button>
     </div>
-    <div class="network-card">
-      <div class="network-card-header">
-        <div class="network-card-title">
-          <div class="network-card-icon icon-purple">VPN</div>
+    <div class="p-card">
+      <div class="p-card-row">
+        <div class="p-card-title">
+          <div class="p-icon di-purple" style="background:rgba(162,155,254,0.15);color:#a29bfe">VPN</div>
           VPN Proxy
         </div>
         <label class="toggle">
@@ -950,22 +1423,16 @@
           <span class="toggle-slider"></span>
         </label>
       </div>
-      <div class="network-card-desc">Routes your traffic through a proxy for extra privacy.</div>
-      <div class="network-stats">
-        <div class="stat-box">
-          <div class="stat-val" id="vpn-status">OFF</div>
-          <div class="stat-label">Status</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" id="vpn-ip">--</div>
-          <div class="stat-label">Proxy</div>
-        </div>
+      <div class="p-desc">Routes traffic through a proxy for privacy.</div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-val" id="vpn-status">OFF</div><div class="stat-label">Status</div></div>
+        <div class="stat-box"><div class="stat-val" id="vpn-ip">--</div><div class="stat-label">Proxy</div></div>
       </div>
     </div>
-    <div class="network-card">
-      <div class="network-card-header">
-        <div class="network-card-title">
-          <div class="network-card-icon icon-blue">DNS</div>
+    <div class="p-card">
+      <div class="p-card-row">
+        <div class="p-card-title">
+          <div class="p-icon" style="background:rgba(83,82,237,0.15);color:#5352ed">DNS</div>
           Network Booster
         </div>
         <label class="toggle">
@@ -973,40 +1440,34 @@
           <span class="toggle-slider"></span>
         </label>
       </div>
-      <div class="network-card-desc">Switches to Cloudflare DNS for faster browsing.</div>
-      <div class="network-stats">
-        <div class="stat-box">
-          <div class="stat-val" id="booster-status">OFF</div>
-          <div class="stat-label">Status</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" id="ping-val">--</div>
-          <div class="stat-label">Ping ms</div>
-        </div>
+      <div class="p-desc">Switches to Cloudflare DNS (1.1.1.1) for faster speeds.</div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-val" id="booster-status">OFF</div><div class="stat-label">Status</div></div>
+        <div class="stat-box"><div class="stat-val" id="ping-val">--</div><div class="stat-label">Ping ms</div></div>
       </div>
-      <button class="ping-btn" id="ping-btn">Test Ping</button>
+      <button class="action-btn" id="ping-btn">Test Ping</button>
     </div>
   </div>
 
   <!-- Antivirus Panel -->
-  <div id="antivirus-panel">
-    <div class="av-header">
+  <div class="panel" id="antivirus-panel" style="width:350px">
+    <div class="panel-header">
       <h3>Antivirus</h3>
-      <button class="menu-close" id="av-close-btn">✕</button>
+      <button class="close-btn" id="av-close">&#10005;</button>
     </div>
-
-    <div class="av-status">
-      <div class="av-icon" id="av-icon">AV</div>
-      <div>
-        <div class="av-title" id="av-title">Protected</div>
-        <div class="av-sub" id="av-sub">All threats blocked</div>
+    <div class="p-card" style="background:rgba(46,213,115,0.08);border-color:rgba(46,213,115,0.2)">
+      <div class="p-card-row">
+        <div class="p-icon" style="background:rgba(46,213,115,0.2);color:var(--green);font-size:16px">&#10003;</div>
+        <div>
+          <div style="font-weight:600">Protected</div>
+          <div style="font-size:11px;color:var(--text2)">F.Y Antivirus is active</div>
+        </div>
       </div>
     </div>
-
-    <div class="network-card">
-      <div class="network-card-header">
-        <div class="network-card-title">
-          <div class="network-card-icon icon-red">URL</div>
+    <div class="p-card">
+      <div class="p-card-row">
+        <div class="p-card-title">
+          <div class="p-icon di-red" style="background:rgba(255,71,87,0.15);color:var(--red)">URL</div>
           Malicious URL Blocker
         </div>
         <label class="toggle">
@@ -1014,13 +1475,12 @@
           <span class="toggle-slider"></span>
         </label>
       </div>
-      <div class="network-card-desc">Blocks known dangerous and phishing websites automatically.</div>
+      <div class="p-desc">Blocks known dangerous and phishing websites.</div>
     </div>
-
-    <div class="network-card">
-      <div class="network-card-header">
-        <div class="network-card-title">
-          <div class="network-card-icon icon-yellow">SCN</div>
+    <div class="p-card">
+      <div class="p-card-row">
+        <div class="p-card-title">
+          <div class="p-icon" style="background:rgba(255,165,2,0.15);color:var(--yellow)">SCN</div>
           Download Scanner
         </div>
         <label class="toggle">
@@ -1028,183 +1488,156 @@
           <span class="toggle-slider"></span>
         </label>
       </div>
-      <div class="network-card-desc">Warns you before opening potentially dangerous downloaded files.</div>
+      <div class="p-desc">Warns before opening potentially dangerous files.</div>
     </div>
-
   </div>
 
-  <!-- Customization Panel -->
-  <div id="custom-panel">
-    <div class="custom-header">
-      <h3>Customize F.Y Browser</h3>
-      <button class="menu-close" id="custom-close-btn">✕</button>
+  <!-- Customize Panel -->
+  <div class="panel" id="custom-panel">
+    <div class="panel-header">
+      <h3>Themes &amp; Customize</h3>
+      <button class="close-btn" id="custom-close">&#10005;</button>
     </div>
-
-    <div class="custom-section">
-      <h4>Themes</h4>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div class="section-label">Theme</div>
       <div class="theme-grid">
-        <div class="theme-btn active" data-theme="dark">
-          <div class="theme-preview" style="background:#000"></div>
-          Dark
-        </div>
-        <div class="theme-btn" data-theme="light">
-          <div class="theme-preview" style="background:#f5f5f5;border:1px solid #ddd"></div>
-          Light
-        </div>
-        <div class="theme-btn" data-theme="purple">
-          <div class="theme-preview" style="background:#0d0014"></div>
-          Purple
-        </div>
-        <div class="theme-btn" data-theme="blue">
-          <div class="theme-preview" style="background:#000d1a"></div>
-          Blue
-        </div>
-        <div class="theme-btn" data-theme="red">
-          <div class="theme-preview" style="background:#1a0000"></div>
-          Red
-        </div>
-        <div class="theme-btn" data-theme="green">
-          <div class="theme-preview" style="background:#001a00"></div>
-          Green
-        </div>
-        <div class="theme-btn" data-theme="neon">
-          <div class="theme-preview" style="background:#000;border:1px solid #00ff88"></div>
-          Neon
-        </div>
-        <div class="theme-btn" data-theme="galaxy">
-          <div class="theme-preview" style="background:#05001a"></div>
-          Galaxy
-        </div>
-        <div class="theme-btn" data-theme="ocean">
-          <div class="theme-preview" style="background:#000d1f"></div>
-          Ocean
-        </div>
+        <div class="theme-btn active" data-theme="dark"><div class="theme-dot" style="background:#0f0f0f"></div>Dark</div>
+        <div class="theme-btn" data-theme="light"><div class="theme-dot" style="background:#f0f0f0;border:1px solid #ccc"></div>Light</div>
+        <div class="theme-btn" data-theme="purple"><div class="theme-dot" style="background:#0d0014"></div>Purple</div>
+        <div class="theme-btn" data-theme="blue"><div class="theme-dot" style="background:#00080f"></div>Blue</div>
+        <div class="theme-btn" data-theme="red"><div class="theme-dot" style="background:#0f0000"></div>Red</div>
+        <div class="theme-btn" data-theme="green"><div class="theme-dot" style="background:#00100a"></div>Green</div>
+        <div class="theme-btn" data-theme="neon"><div class="theme-dot" style="background:#000;border:1px solid #00ff88"></div>Neon</div>
+        <div class="theme-btn" data-theme="galaxy"><div class="theme-dot" style="background:#04001a"></div>Galaxy</div>
       </div>
     </div>
-
-    <div class="custom-section">
-      <h4>Fonts</h4>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div class="section-label">Font</div>
       <div class="font-grid">
         <div class="font-btn active" data-font="Inter" style="font-family:'Inter'">Inter</div>
         <div class="font-btn" data-font="Poppins" style="font-family:'Poppins'">Poppins</div>
         <div class="font-btn" data-font="Roboto" style="font-family:'Roboto'">Roboto</div>
-        <div class="font-btn" data-font="JetBrains Mono" style="font-family:'JetBrains Mono'">Mono</div>
-        <div class="font-btn" data-font="Nunito" style="font-family:'Nunito'">Nunito</div>
+        <div class="font-btn" data-font="Georgia" style="font-family:Georgia">Georgia</div>
       </div>
     </div>
-
-    <div class="custom-section">
-      <h4>Accent Color</h4>
-      <div class="color-grid">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div class="section-label">Accent Color</div>
+      <div class="color-row">
         <div class="color-dot" data-color="#ff4757" style="background:#ff4757"></div>
         <div class="color-dot" data-color="#2ed573" style="background:#2ed573"></div>
-        <div class="color-dot" data-color="#5352ed" style="background:#5352ed"></div>
+        <div class="color-dot active" data-color="#5352ed" style="background:#5352ed"></div>
         <div class="color-dot" data-color="#ffa502" style="background:#ffa502"></div>
-        <div class="color-dot" data-color="#ff6b81" style="background:#ff6b81"></div>
-        <div class="color-dot" data-color="#00d2ff" style="background:#00d2ff"></div>
         <div class="color-dot" data-color="#a29bfe" style="background:#a29bfe"></div>
         <div class="color-dot" data-color="#fd79a8" style="background:#fd79a8"></div>
-        <input type="color" id="custom-color" style="width:28px;height:28px;border:none;border-radius:50%;cursor:pointer;padding:0;" value="#ffffff">
+        <div class="color-dot" data-color="#00cec9" style="background:#00cec9"></div>
+        <div class="color-dot" data-color="#e17055" style="background:#e17055"></div>
+        <input type="color" id="custom-color" value="#5352ed" style="width:26px;height:26px;border:none;border-radius:50%;cursor:pointer;padding:0">
       </div>
     </div>
-
-    <div class="custom-section">
-      <h4>Border Radius</h4>
-      <div class="radius-grid">
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div class="section-label">Border Radius</div>
+      <div class="radius-row">
         <button class="radius-btn" data-radius="0px">Sharp</button>
         <button class="radius-btn active" data-radius="8px">Normal</button>
-        <button class="radius-btn" data-radius="20px">Round</button>
-        <button class="radius-btn" data-radius="50px">Pill</button>
+        <button class="radius-btn" data-radius="18px">Round</button>
+        <button class="radius-btn" data-radius="40px">Pill</button>
       </div>
     </div>
-
-    <div class="custom-section">
-      <h4>Own UI</h4>
-      <button class="own-ui-btn" id="own-ui-btn">Build Your Own UI</button>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div class="section-label">Build Your Own UI</div>
+      <button class="own-ui-btn" id="open-own-ui">Open CSS Editor</button>
     </div>
-
   </div>
 
   <!-- Own UI Panel -->
-  <div id="own-ui-panel">
-    <div class="own-ui-header">
-      <h3>Build Your Own UI</h3>
-      <button class="menu-close" id="own-ui-close-btn">✕</button>
+  <div class="panel" id="own-ui-panel">
+    <div class="panel-header">
+      <h3>CSS Editor — Build Your UI</h3>
+      <button class="close-btn" id="own-ui-close">&#10005;</button>
     </div>
-
-    <div class="custom-section">
-      <h4>Quick Presets</h4>
-      <div class="css-presets">
-        <button class="css-preset" id="preset-minimal">Minimal</button>
-        <button class="css-preset" id="preset-glass">Glass</button>
-        <button class="css-preset" id="preset-retro">Retro</button>
-        <button class="css-preset" id="preset-reset">Reset</button>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div class="section-label">Quick Presets</div>
+      <div class="presets-grid">
+        <button class="preset-btn" id="preset-minimal">Minimal</button>
+        <button class="preset-btn" id="preset-glass">Glass</button>
+        <button class="preset-btn" id="preset-retro">Retro Terminal</button>
+        <button class="preset-btn" id="preset-reset">Reset All</button>
       </div>
     </div>
-
-    <div class="custom-section">
-      <h4>Custom CSS</h4>
-      <textarea class="css-editor" id="css-editor" placeholder="/* Write your custom CSS here */
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div class="section-label">Custom CSS</div>
+      <textarea class="css-editor" id="css-editor" placeholder="/* Write your own CSS here */
 /* Example: */
 #navbar { background: red; }
 #titlebar { background: blue; }
 .tab { border-radius: 0; }"></textarea>
     </div>
+    <button class="primary-btn" id="apply-css">Apply CSS</button>
+  </div>
 
-    <button class="apply-css-btn" id="apply-css-btn">Apply CSS</button>
+  <!-- History Panel -->
+  <div class="panel" id="history-panel">
+    <div class="panel-header">
+      <h3>History</h3>
+      <button class="close-btn" id="history-close">&#10005;</button>
+    </div>
+    <button class="action-btn" id="clear-history" style="color:var(--red)">Clear History</button>
+    <div id="history-list"></div>
+  </div>
 
+  <!-- Bookmarks Panel -->
+  <div class="panel" id="bm-panel">
+    <div class="panel-header">
+      <h3>Bookmarks</h3>
+      <button class="close-btn" id="bm-close">&#10005;</button>
+    </div>
+    <div id="bm-list"></div>
   </div>
 
   <!-- Feedback Panel -->
-  <div id="feedback-panel">
-    <div class="feedback-header">
+  <div class="panel" id="feedback-panel">
+    <div class="panel-header">
       <h3>Send Feedback</h3>
-      <button class="menu-close" id="feedback-close-btn">✕</button>
+      <button class="close-btn" id="fb-close">&#10005;</button>
     </div>
-
-    <div class="custom-section">
-      <h4>Type</h4>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div class="section-label">Type</div>
       <div class="feedback-types">
-        <div class="feedback-type active" data-type="bug">Bug Report</div>
-        <div class="feedback-type" data-type="feature">Feature Idea</div>
-        <div class="feedback-type" data-type="general">General</div>
+        <div class="fb-type active" data-type="bug">Bug Report</div>
+        <div class="fb-type" data-type="feature">Feature Idea</div>
+        <div class="fb-type" data-type="general">General</div>
       </div>
     </div>
-
-    <div class="custom-section">
-      <h4>Rating</h4>
-      <div class="feedback-rating">
-        <button class="rating-star" data-rating="1">&#9733;</button>
-        <button class="rating-star" data-rating="2">&#9733;</button>
-        <button class="rating-star" data-rating="3">&#9733;</button>
-        <button class="rating-star" data-rating="4">&#9733;</button>
-        <button class="rating-star" data-rating="5">&#9733;</button>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <div class="section-label">Rating</div>
+      <div class="stars">
+        <button class="star-btn" data-r="1">&#9733;</button>
+        <button class="star-btn" data-r="2">&#9733;</button>
+        <button class="star-btn" data-r="3">&#9733;</button>
+        <button class="star-btn" data-r="4">&#9733;</button>
+        <button class="star-btn" data-r="5">&#9733;</button>
       </div>
     </div>
-
-    <textarea class="feedback-input" id="feedback-text" placeholder="Tell us what you think about F.Y Browser..."></textarea>
-
-    <button class="send-feedback-btn" id="send-feedback-btn">Send Feedback</button>
+    <textarea class="fb-input" id="fb-text" placeholder="Tell us what you think about F.Y Browser..."></textarea>
+    <button class="send-btn" id="fb-send">Send Feedback</button>
   </div>
 
   <!-- Update Panel -->
   <div id="update-panel">
-    <div class="update-title" id="update-title">Update Available</div>
-    <div class="update-sub" id="update-sub">Downloading new version...</div>
-    <div class="update-bar-bg">
-      <div class="update-bar" id="update-bar"></div>
-    </div>
-    <button class="update-btn" id="update-install-btn" style="display:none">Restart to Update</button>
+    <div class="upd-title" id="upd-title">Update Available</div>
+    <div class="upd-sub" id="upd-sub">Downloading...</div>
+    <div class="upd-bar-bg"><div class="upd-bar" id="upd-bar"></div></div>
+    <button class="upd-btn" id="upd-install" style="display:none">Restart &amp; Install</button>
   </div>
 
   <!-- Security Alert -->
   <div id="security-alert"></div>
 
   <!-- FPS Counter -->
-  <div id="fps-counter" style="position:fixed;top:50px;left:12px;background:rgba(0,0,0,0.85);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--green);z-index:500;display:none;font-family:monospace;">FPS: --</div>
+  <div id="fps-counter">FPS: --</div>
 
-  <!-- Cookie Toast -->
-  <div id="cookie-toast">Cookies Destroyed!</div>
+  <!-- Toast -->
+  <div id="toast"></div>
 
   <!-- Custom Style -->
   <style id="custom-style"></style>
