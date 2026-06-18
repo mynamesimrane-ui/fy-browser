@@ -1,6 +1,6 @@
 {
   "name": "fy-browser",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "F.Y Browser — Free Forever, For Family",
   "main": "main.js",
   "author": "Imrane",
@@ -11,6 +11,9 @@
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux"
   },
+  "dependencies": {
+    "electron-updater": "^6.1.7"
+  },
   "devDependencies": {
     "electron": "^29.0.0",
     "electron-builder": "^24.0.0"
@@ -18,40 +21,33 @@
   "build": {
     "appId": "com.fy.browser",
     "productName": "F.Y Browser",
+    "publish": {
+      "provider": "github",
+      "owner": "mynamesimrane-ui",
+      "repo": "fy-browser"
+    },
     "directories": {
       "output": "dist"
     },
     "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ]
+      "target": [{ "target": "nsis", "arch": ["x64"] }]
     },
     "mac": {
-      "target": [
-        {
-          "target": "dmg",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ],
+      "target": [{ "target": "dmg", "arch": ["x64", "arm64"] }],
       "category": "public.app-category.utilities"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "F.Y Browser"
     },
     "files": [
       "main.js",
       "index.html",
       "renderer.js",
-      "Style.css",
       "package.json"
     ]
-  },
-  "dependencies": {
-    "electron-updater": "^6.8.3"
   }
 }
