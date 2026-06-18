@@ -470,7 +470,11 @@
       box-shadow: 0 12px 48px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.4);
       z-index: 2000;
       display: none;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: calc(100vh - 110px);
+      scrollbar-width: thin;
+      scrollbar-color: #333 transparent;
       animation: dropIn 0.15s ease;
     }
 
@@ -1203,14 +1207,6 @@
   <div id="browser-view">
     <webview id="webview" src="https://www.google.com" allowpopups partition="persist:fywebview"></webview>
 
-    <!-- Reader Mode Overlay -->
-    <div id="reader-overlay">
-      <button id="reader-close">Exit Reader Mode</button>
-      <div id="reader-content">
-        <div id="reader-title"></div>
-        <div id="reader-body"></div>
-      </div>
-    </div>
   </div>
 
   <!-- Overlay -->
@@ -1288,10 +1284,6 @@
         <div class="drop-icon di-gray">&#128269;</div>
         <span class="drop-label">Find in Page</span>
         <span class="drop-shortcut">Ctrl+F</span>
-      </div>
-      <div class="drop-item" id="drop-reader">
-        <div class="drop-icon di-gray">&#9776;</div>
-        <span class="drop-label">Reader Mode</span>
       </div>
       <div class="drop-item" id="drop-darkmode">
         <div class="drop-icon di-gray">&#9790;</div>

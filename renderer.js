@@ -73,7 +73,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const tab = tabs.find(t => t.id === id)
     if (!tab) return
     webview.src = tab.url
-    urlBar.value = tab.url === 'https://www.google.com' ? '' : tab.url
+    const isHome = tab.url === 'https://www.google.com' || tab.url === 'https://www.google.com/'
+    urlBar.value = isHome ? '' : tab.url
     renderTabs()
     updateUrlPrefix(tab.url)
   }
@@ -127,15 +128,28 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   webview.addEventListener('did-navigate', e => {
-    urlBar.value = e.url
+    const isHome = e.url === 'https://www.google.com' || e.url === 'https://www.google.com/'
+    urlBar.value = isHome ? '' : e.url
     updateUrlPrefix(e.url)
     const tab = tabs.find(t => t.id === activeTab)
     if (tab) tab.url = e.url
     // Add to history
-    if (e.url !== 'https://www.google.com') {
+    if (!isHome) {
       history.unshift({ url: e.url, title: tab ? tab.title : e.url, time: Date.now() })
       if (history.length > 100) history.pop()
       localStorage.setItem('fy-history', JSON.stringify(history))
+    }
+    // Antivirus — check navigated URL
+    const suspicious = [
+      'phishing', 'malware', 'virus', 'trojan', 'free-robux',
+      'crypto-giveaway', 'win-prize', 'account-verify', 'scam',
+      'fake-login', 'secure-login.ml', 'bank-update.ga',
+      'paypal-verify.cf', 'apple-id-verify', 'steam-free'
+    ]
+    if (malwareBlockEnabled && suspicious.some(s => e.url.toLowerCase().includes(s))) {
+      webview.loadURL('about:blank')
+      showAlert('THREAT BLOCKED by F.Y Antivirus: ' + e.url)
+      toast('Malicious site blocked!', '#ff4757')
     }
   })
 
